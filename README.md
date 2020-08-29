@@ -7,4 +7,4 @@ This repo contains important statistical articles relevant to my research broken
 
 James A. Hanley, Abdissa Negassa, Michael D. deB. Edwardes, Janet E. Forrester, Statistical Analysis of Correlated Data Using Generalized Estimating Equations: An Orientation, American Journal of Epidemiology, Volume 157, Issue 4, 15 February 2003, Pages 364–375, https://doi.org/10.1093/aje/kwf215; https://github.com/mlamias/Statistics-Articles/blob/master/kwf215.pdf
 
-Rich, Ben (2009) "[Presentation on “Statistical Analysis of Correlated Data Using Generalized Estimating Equations: An Orientation” By J. Hanley et al.}(https://github.com/mlamias/Statistics-Articles/blob/master/kwf215.pdf)
+Rich, Ben (2009) ["Presentation on “Statistical Analysis of Correlated Data Using Generalized Estimating Equations: An Orientation” By J. Hanley et al.](https://github.com/mlamias/Statistics-Articles/blob/master/kwf215.pdf)
