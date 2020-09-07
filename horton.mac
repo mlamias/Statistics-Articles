@@ -1,0 +1,1613 @@
+/* Goodness of fit for Generalized Estimating Equations: 
+   v1.03   April, 1999
+   Horton, Bebchuk, Jones, Lipsitz, Catalano, Zahner and Fitzmaurice
+   Statistics in Medicine 1999 (18) 213-222.
+   horton@hsph.harvard.edu
+
+   Software written by Stuart Lipsitz.
+   Copyright 1999 President and Fellows of Harvard College.
+
+   The program is provided "as is", without warranty of any kind, either
+   expressed or implied, including, but not limited to, the implied 
+   warranties of merchantability and fitness for a particular purpose.
+*/
+
+options nocenter linesize=80;
+ods select hts;
+%macro c2(reg,num,name2);
+  %do k=1 %to &num;
+     %let covk=%scan(&reg,&k);
+       &covk = &covk * &name2 ;
+  %end;
+%mend c2;
+
+%macro contrast(c=);
+do;
+if contrast = 0 then goto bottom;
+
+nc= ncol(contrast);
+
+r= nrow(variable);
+
+contrast=contrast[1,2:nc];
+
+nr=(nc-1)/(r);
+nr=round(nr);
+
+contrast=shape(contrast,nr,r);
+
+xsq=(contrast*estimate)`*inv(contrast*vb*contrast`)*
+    (contrast*estimate);
+cont_est = contrast*estimate;
+var_cont = contrast*vb*contrast`;
+
+df=nrow(contrast);
+
+p=1-probchi(xsq,df);
+&c=contrast;
+
+
+%if &c=c1 %then %do;
+print,  {"CONTRAST:   &title1"  };
+%end;
+%if &c=c2 %then %do;
+print, {'                   '  };
+print, {"CONTRAST:   &title2"  };
+%end;
+/*
+print , &c;
+*/
+
+/*print, xsq df p;
+create hts var{xsq df p};
+append;
+show contents;
+close hts;
+*/
+
+%if &c1est^=no %then %do;
+print, {'estimate of contrast is'  };
+print, cont_est var_cont;
+%end;
+%if &c2est^=no %then %do;
+print, {'estimate of contrast is'  };
+print, cont_est var_cont;
+%end;
+
+bottom:
+   stop;
+end;
+%mend contrast;
+
+%macro delem(reg,num);
+  %do k=1 %to &num;
+    %let covk=%scan(&reg,&k);
+    if &covk=. then delete;
+  %end;
+%mend delem;
+
+
+%macro gee(data=_last_,y=,x=,id=,maxit=15,int=,print=yes,corr=ind,weight=,
+           outbeta=,it_his=no,method=cond,crit=.000001,outrho=,
+           time=,k_j=,power=1,c1=,title1=,c1est=no,c2=,title2=,c2est=no,
+           g=10,extra=1,);
+
+%* id = 1 to n;
+%* time = time of observation ;
+
+
+
+%* ---- count the covariates;
+%let p=0;
+%do %while(%scan(&x,&p+1)^=); %let p=%eval(&p+1); %end;
+
+data zzone;
+   set &data;
+   one=1;
+  if &y=. then delete;
+   %delem(&x,&p);
+   yzzz=1-&y;
+   intercept=1;
+run;
+
+proc sort data = zzone;
+ by &id;
+run;
+
+data zzone;
+  set zzone;
+  by &id;
+  if first.&id then idm+1;
+  run;
+
+proc sort data=zzone;
+  by &id
+%if &time^= %then %do;
+    &time
+%end;
+;
+run;
+
+proc logistic data=zzone covout outest=esti noprint;
+%if &int=no %then %do;
+    model yzzz=&x /noint MAXITER=100;
+%end;
+%else %do;
+    model yzzz=&x / MAXITER=100;
+%end;
+%if &weight^= %then %do;
+    weight &weight;
+%end;
+%if &corr=ind %then %do;
+    output out=resid p=_p_;
+%end;
+run;
+
+data par(drop=_type_ _name_
+%if &sysver^=6.07 %then %do;
+    _lnlike_
+%end;
+  );
+    set esti;
+    if (_type_ ne 'PARMS') then delete;
+run;
+
+/*
+proc print data=par;
+    title 'Par';
+run;
+*/
+
+%if &corr=ind %then %do;
+
+data c1(drop=_type_ _name_ _link_
+%if &sysver^=6.07 %then %do;
+    _lnlike_
+%end;
+  );
+    set esti;
+    if (_type_  = 'PARMS') then delete;
+run;
+
+/*
+proc print data=c1;
+   title 'C1';
+run;
+*/
+
+data resid2;
+  set resid;
+  _resid_ = yzzz - (1-_p_);
+  _z_ = (yzzz - (1-_p_))/sqrt(_p_*(1-_p_) );
+  run;
+
+proc sort data=resid2;
+  by &id;
+run;
+
+/*
+proc print data=resid2;
+  title 'Resid2';
+run;
+*/
+
+data c2dat1;
+ set resid2;
+ %c2(&x,&p,_resid_);
+;
+
+/*
+proc print data=c2dat1;
+   title 'C2dat1';
+run;
+*/
+
+proc means data=c2dat1 noprint;
+    by &id;
+    var
+%if &weight^= %then %do;
+    &weight
+%end;
+%if &int=no %then %do;
+     &x;
+%end;
+%else %do;
+     _resid_ &x;
+%end;
+    output out=c2dat2(drop=_type_ _freq_ &id
+%if &weight^= %then %do;
+    j0
+jj1 - jj&p
+%if &int^=no %then %do;
+   jj0
+%end;
+
+%end;
+)
+    sum =
+%if &weight^= %then %do;
+    j0
+%end;
+%if &int=no %then %do;
+    &x
+%end;
+%else %do;
+    intr &x
+%end;
+%if &weight^= %then %do;
+    mean =
+    &weight
+%if &int=no %then %do;
+    jj1 - jj&p
+%end;
+%else %do;
+   jj0 jj1 - jj&p
+%end;
+
+%end;
+ ;
+run;
+
+/*
+proc print data=c2dat2;
+   title 'C2dat2';
+run;
+*/
+
+proc corr nocorr sscp out=uusq(type=sscp) noprint;
+%if &weight^= %then %do;
+    weight &weight;
+%end;
+ title '                         ';
+   ;
+
+/*
+proc print data=uusq;
+  title 'Uusq';
+run;
+*/
+
+data c2(drop=_type_ _name_ intercept);
+    set uusq;
+    if (_type_ ne 'SSCP') then delete;
+    if (_name_ = 'Intercept') then delete;
+    RUN;
+
+/*
+proc print data=c2;
+  title 'C2';
+run;
+*/
+
+proc iml worksize=500;
+
+ reset nolog noprint;
+
+     use par;
+     read all into beta;
+nbeta = ncol(beta);
+
+     use c1;
+     read all into n_1c1_1;
+
+     use c2;
+     read all into nc2;
+
+%if &int=no %then %do;
+variable = { &x };
+%end;
+%else %do;
+variable = { "INTERCEPT" } || { &x };
+%end;
+
+variable =   variable`;
+
+     vb = n_1c1_1;   *naive covariance ;
+
+     sebeta=sqrt(vecdiag(vb));      *vector of estimated
+                                       standard errors of
+                                       beta;
+
+     z=beta`/sebeta;                   *z-statistics;
+
+     zsq=z#z;
+
+     p=1-probchi(zsq,1);              *two-sided p-value;
+
+estimate=beta`;
+se_est=sebeta;
+
+%if &print^=no %then %do;
+   /*print, { 'Correlation Structure: Independence' };
+   print, { '                                   ' };
+   print, { 'PARAMETER ESTIMATES with naive variance' };
+   print, variable estimate se_est z p;*/
+%end;
+
+     vb = n_1c1_1*nc2*n_1c1_1;        *estimated covariance ;
+
+     sebeta=sqrt(vecdiag(vb));      *vector of estimated
+                                       standard errors of
+                                       beta;
+     z=beta`/sebeta;                   *z-statistics;
+
+     zsq=z#z;
+
+     p=1-probchi(zsq,1);              *two-sided p-value;
+
+     se_est=sebeta;
+
+%if &print^=no %then %do;
+   /*print, { 'PARAMETER ESTIMATES with robust variance' };
+   print, variable estimate se_est z p;*/
+%end;
+
+%if &outbeta^= %then %do;
+
+vc= j(1,nbeta,'v');
+coln = variable` || ( concat(vc,variable`) );
+out = estimate` || (se_est#se_est)` ;
+create &outbeta from out [colname=coln];
+append from out;
+close &outbeta;
+%end;
+
+%if &print^=no %then %do;
+
+   contrast= { 0  &c1 };
+   %contrast(c=c1);
+
+   contrast= { 0  &c2 };
+   %contrast(c=c2);
+%end;
+
+quit;
+
+
+data zb;
+ set resid2;
+  call symput('ntot',_n_);
+run;
+
+proc sort data=zb;
+ by _p_;
+run;
+
+proc iml worksize=5000;
+ reset nolog noprint;
+
+%if &extra= %then %do;
+ extra=&g;
+%end;
+%else %do;
+ extra=&extra ;
+%end;
+
+ junk = j(&ntot,1,extra);
+
+ if ceil(&ntot/&g) = &ntot/&g then ng =  &ntot/&g ;
+  else ng = ceil(&ntot/&g) - 1;
+
+ do i = 1 to &g;
+
+  out = out // (i#(j(ng,1,1)));
+
+ end;
+
+junk[1:&g#ng,] = out;
+
+ coln = { "group_z" };
+
+create group from junk [colname=coln];
+append from junk;
+close group;
+quit;
+
+proc sort data=group;
+ by group_z;
+run;
+
+data zb;
+  merge zb group;
+  run;
+
+data zb;
+ set zb;
+%do c=1 %to &g;
+
+ g&c = 0;
+ if group_z = &c then g&c=1;
+
+%end;
+ run;
+
+%if &int=no %then %do;
+
+/*
+data x ( keep = &x c2-c&g );
+  length &x c2-c&g 8;
+set zb;
+run;
+*/
+data x ( keep = &x 
+%do c=2 %to &g;
+ g&c 
+%end;
+);
+  length &x 
+%do c=2 %to &g;
+ g&c 
+%end;
+8;
+set zb;
+run;
+
+%end;
+%else %do;
+
+/*
+data x (keep=intercept &x c2-&cg);
+ length intercept &x c2-c&g 8;
+set zb;
+ run;
+*/
+data x ( keep =intercept &x 
+%do c=2 %to &g;
+ g&c 
+%end;
+);
+  length intercept &x 
+%do c=2 %to &g;
+ g&c 
+%end;
+8;
+set zb;
+run;
+
+%end;
+
+data y ( keep = &y );
+set zb;
+run;
+
+data id ( keep = idm );
+set zb;
+run;
+
+proc iml worksize=500;
+
+ reset nolog noprint;
+
+/*initial marginal parameters */
+
+   USE PAR;
+   READ ALL INTO BETA;
+beta=beta`;
+nbeta0 = nrow(beta);
+ gbeta = j(&g-1,1,0);
+ beta = beta//gbeta;
+
+nbeta = nrow(beta);
+
+   USE Y;
+   READ ALL INTO Y;
+
+   USE X;
+   READ ALL INTO X;
+
+ nall =nrow(x);           /* number records in dataset, times*ind
+*/
+
+   USE ID;
+   READ ALL INTO ID;
+
+
+ n = max(id);
+
+   U= J(Nbeta,1,0);
+   dvd= J(Nbeta,nbeta,0);
+   usq = dvd;
+
+Do i=1 to n;
+    times = loc(id=i);
+    T_i = ncol(times);
+    Y_i = Y[times,];
+    X_i = X[times,];
+    p_i = exp(X_i*beta)/(1 + exp(X_i*beta) );
+    A_i = Diag( diag(p_i) - p_i*p_i` );
+    D_i =  X_i`*A_i;
+
+  V_i = A_i;
+
+u_i = D_i*inv(V_i)*( Y_i - p_i );
+u = u + u_i;
+usq = usq + u_i*u_i`;
+dvd =  dvd + D_i*inv(V_i)*D_i`;;
+
+end;
+
+u_0 = u[nbeta0+1:nbeta0+&g-1,];
+
+du1_db = dvd[1:nbeta0,1:nbeta0];
+du2_db = dvd[nbeta0+1:nbeta0+&g-1,1:nbeta0];
+
+A = -1#du2_db*inv(du1_db);
+ig = i(&g-1);
+
+c = A || ig;
+
+vu_0 = c*usq*c`;
+
+xsq=u_0`*inv(vu_0)*u_0;
+
+df=&g-1;
+
+p=1-probchi(xsq,df);
+
+/*print, {'                   '  };
+print, {"GOF stat # groups= &g"  };*/
+
+/*print, xsq df p;*/
+/*create hts var{xsq df p}*/
+x=xsq || df || p;
+edit hts;
+setout hts;
+append from x;
+free x;
+close hts;
+quit;
+
+%end;
+%else %do;
+
+%if &int=no %then %do;
+
+
+data x ( keep = &x );
+  length &x 8;
+set zzone;
+run;
+
+%end;
+%else %do;
+
+data x (keep=intercept &x);
+ length intercept &x 8;
+set zzone;
+ run;
+
+%end;
+
+data y ( keep = &y );
+set zzone;
+run;
+
+data id ( keep = idm );
+set zzone;
+run;
+
+%if &weight^= %then %do;
+data wt ( keep = &weight );
+set zzone;
+run;
+%end;
+
+%if &corr=exc or &corr=cs %then %do;
+
+proc iml worksize=500;
+
+ reset nolog noprint;
+
+/*initial marginal parameters */
+
+   USE PAR;
+   READ ALL INTO BETA;
+beta=beta`;
+nbeta = nrow(beta);
+   USE Y;
+   READ ALL INTO Y;
+
+   USE X;
+   READ ALL INTO X;
+
+ nall =nrow(x);           /* number records in dataset, times*ind
+*/
+
+   USE ID;
+   READ ALL INTO ID;
+
+%if &weight^= %then %do;
+   USE WT;
+   READ ALL INTO WT;
+%end;
+
+ n = max(id);
+
+crit=1;
+  theta=.01;
+
+
+Do it=1 to &maxit while (crit > &crit );
+
+   U= J(Nbeta,1,0);
+   dvd= J(Nbeta,nbeta,0);
+   usq = dvd;
+   u2 = 0;
+   ewe = 0;
+
+Do i=1 to n;
+   u2_i = 0;
+   ewe_i = 0;
+    times = loc(id=i);
+    T_i = ncol(times);
+    Y_i = Y[times,];
+    X_i = X[times,];
+%if &weight^= %then %do;
+   wt_i = wt[times,];
+   wt_i = wt_i[1,];
+%end;
+    p_i = exp(X_i*beta)/(1 + exp(X_i*beta) );
+    A_i = Diag( diag(p_i) - p_i*p_i` );
+    D_i =  X_i`*A_i;
+
+  V_i = j(T_i,T_i,0);
+
+ if (T_i > 1) then do;
+  do s=1 to T_i;
+     do t=s+1 to T_i;
+
+ corr_st =   (EXP(theta)-1)/(EXP(theta)+1) ;
+   DET = SQRT( p_i[s,]#p_i[t,]#(1-p_i[s,])#(1-p_i[t,]) );
+   Pst = p_i[s,]#p_i[t,] + corr_st#det;
+   DOR = 2#(EXP(theta))/(EXP(theta)+1)/(EXP(theta)+1)#det;
+
+%if &method=cond %then %do;
+
+   DOR = (Y_i[s,]/p_i[s,])#DOR -
+         (1-Y_i[s,])/(1-p_i[s,])#DOR ;
+
+   V_i[s,t] = pst - p_i[s,]#p_i[t,];
+   V_i[t,s] = pst - p_i[s,]#p_i[t,];
+
+   nust = (Y_i[s,]/p_i[s,])#pst +
+         (1-Y_i[s,])/(1-p_i[s,])#(p_i[t,] - pst) ;
+
+   u2_i = u2_i + Dor#( Y_i[t,] - nust )/(nust#(1-nust));
+   ewe_i = ewe_i + Dor#Dor/(nust#(1-nust));
+%end;
+
+%if &method=uncond %then %do;
+
+   V_i[s,t] = pst - p_i[s,]#p_i[t,];
+   V_i[t,s] = pst - p_i[s,]#p_i[t,];
+
+   u2_i = u2_i + Dor#( (Y_i[s,])#(Y_i[t,]) - pst )/(pst#(1-pst));
+   ewe_i = ewe_i + Dor#Dor/(pst#(1-pst));
+%end;
+
+
+     end;
+   end;
+end;
+   V_i = V_i + A_i;
+
+u_i = D_i*inv(V_i)*( Y_i - p_i );
+%if &weight^= %then %do;
+u = u + wt_i#u_i;
+usq = usq + wt_i#u_i*u_i`;
+dvd =  dvd + wt_i#D_i*inv(V_i)*D_i`;;
+
+u2 = u2 + wt_i#u2_i;
+ewe = ewe + wt_i#ewe_i;
+%end;
+%else %do;
+u = u + u_i;
+usq = usq + u_i*u_i`;
+dvd =  dvd + D_i*inv(V_i)*D_i`;;
+
+u2 = u2 + u2_i;
+ewe = ewe + ewe_i;
+%end;
+
+end;
+
+   DELTA1= solve( dvd, U );
+   beta = beta+DELTA1;
+
+   DELTA2= solve( ewe, U2 );
+   theta = theta + delta2;
+   CRIT= MAX( ABS(DELTA1 // delta2));
+
+%if &print^=no %then %do;
+   %if &it_his=yes %then %do;
+     print, it crit;
+   %end;
+%end;
+
+end;
+
+%if &print^=no %then %do;
+   print, it crit;
+%end;
+
+%if &int=no %then %do;
+variable = { &x };
+%end;
+%else %do;
+variable = { "INTERCEPT" } || { &x };
+%end;
+
+variable =   variable`;
+
+     vb=inv(dvd);       *variance matrix;
+
+     sebeta=sqrt(vecdiag(vb));      *vector of estimated
+                                       standard errors of
+                                       beta;
+
+     z=beta/sebeta;                   *z-statistics;
+
+     zsq=z#z;
+
+     p=1-probchi(zsq,1);              *two-sided p-value;
+
+estimate=beta;
+se_est=sebeta;
+
+%if &print^=no %then %do;
+   /*print, { 'Correlation Structure: Exchangeable' };
+   print, { '                                   ' };
+   print, { 'PARAMETER ESTIMATES with naive variance' };
+   print, variable estimate se_est z p;*/
+%end;
+
+     vb=vb*usq*vb;              *robust variance matrix;
+
+     sebeta=sqrt(vecdiag(vb));      *vector of estimated
+                                       standard errors of
+                                       beta;
+     z=beta/sebeta;                   *z-statistics;
+
+     zsq=z#z;
+
+     p=1-probchi(zsq,1);              *two-sided p-value;
+
+     se_est=sebeta;
+
+%if &print^=no %then %do;
+   /*print, { 'PARAMETER ESTIMATES with robust variance' };
+   print, variable estimate se_est z p;*/
+%end;
+
+%if &outbeta^= %then %do;
+
+vc= j(1,nbeta,'v');
+coln = variable` || ( concat(vc,variable`) );
+out = estimate` || (se_est#se_est)` ;
+create &outbeta from out [colname=coln];
+append from out;
+close &outbeta;
+%end;
+
+
+/* Variance of CORR  */
+
+   U= J(Nbeta+1,1,0);
+   dvd= J(Nbeta,nbeta,0);
+   usq= J(Nbeta+1,nbeta+1,0);
+   ewe = 0;
+   ewd= J(1,nbeta,0);
+
+Do i=1 to n;
+   u2_i = 0;
+   ewe_i = 0;
+   ewd_i= J(1,nbeta,0);
+    times = loc(id=i);
+    T_i = ncol(times);
+    Y_i = Y[times,];
+    X_i =   X[times,];
+%if &weight^= %then %do;
+   wt_i = wt[times,];
+   wt_i = wt_i[1,];
+%end;
+    p_i = exp(X_i*beta)/(1 + exp(X_i*beta) );
+    A_i = Diag( diag(p_i) - p_i*p_i` );
+    D_i =  X_i`*A_i;
+
+  V_i = j(T_i,T_i,0);
+
+ if (T_i > 1) then do;
+  do s=1 to T_i;
+     do t=s+1 to T_i;
+
+ corr_st =  ( (EXP(theta)-1)/(EXP(theta)+1) );
+   DET = SQRT( p_i[s,]#p_i[t,]#(1-p_i[s,])#(1-p_i[t,]) );
+   Pst = p_i[s,]#p_i[t,] + corr_st#det;
+   DOR = 2#(EXP(theta))/(EXP(theta)+1)/(EXP(theta)+1)#det;
+   V_i[s,t] = pst - p_i[s,]#p_i[t,];
+   V_i[t,s] = pst - p_i[s,]#p_i[t,];
+
+
+%if &method=cond %then %do;
+
+DPs = p_i[t,] + .5#corr_st#p_i[t,]#(1-p_i[t,])#(1-2#p_i[s,])/DET;
+DPt = p_i[s,] + .5#corr_st#p_i[s,]#(1-p_i[s,])#(1-2#p_i[t,])/DET;
+
+   DOR = (Y_i[s,]/p_i[s,])#DOR -
+         (1-Y_i[s,])/(1-p_i[s,])#DOR ;
+
+   nust = (Y_i[s,]/p_i[s,])#pst +
+         (1-Y_i[s,])/(1-p_i[s,])#(p_i[t,] - pst) ;
+
+   DPs = Y_i[s,]#( DPs/p_i[s,] - pst/( (p_i[s,])##2 ) ) +
+(1-Y_i[s,])#( (-1)#DPs/(1-p_i[s,])+(p_i[t,]- pst)/(
+(1-p_i[s,])##2 ) );
+
+ DPt = Y_i[s,]#( DPt/p_i[s,]  ) +
+(1-Y_i[s,])#( (1-DPt)/(1-p_i[s,]) );
+
+DP = Dps // Dpt;
+DB = D_i[,s] || D_i[,t];
+DB = DB*DP;
+
+   u2_i = u2_i + Dor#( Y_i[t,] - nust )/(nust#(1-nust));
+  ewe_i = ewe_i + Dor#Dor/(nust#(1-nust));
+  ewd_i = ewd_i + Dor*( 1/(nust#(1-nust) ) )*db`;
+%end;
+
+%if &method=uncond %then %do;
+
+DPs = p_i[t,] + .5#corr_st#p_i[t,]#(1-p_i[t,])#(1-2#p_i[s,])/DET;
+DPt = p_i[s,] + .5#corr_st#p_i[s,]#(1-p_i[s,])#(1-2#p_i[t,])/DET;
+
+DP = Dps // Dpt;
+DB = D_i[,s] || D_i[,t];
+DB = DB*DP;
+
+   u2_i = u2_i + Dor#( Y_i[s,]#Y_i[t,] - pst )/(pst#(1-pst));
+  ewe_i = ewe_i + Dor#Dor/(pst#(1-pst));
+  ewd_i = ewd_i + Dor*( 1/(pst#(1-pst) ) )*db`;
+%end;
+
+     end;
+   end;
+end;
+   V_i = V_i + A_i;
+
+u_i = ( D_i*inv(V_i)*( Y_i - p_i ) ) // u2_i;
+%if &weight^= %then %do;
+usq = usq + wt_i#u_i*u_i`;
+dvd =  dvd + wt_i#D_i*inv(V_i)*D_i`;;
+
+ewe = ewe + wt_i#ewe_i;
+ewd = ewd + wt_i#ewd_i;
+%end;
+%else %do;
+usq = usq + u_i*u_i`;
+dvd =  dvd + D_i*inv(V_i)*D_i`;;
+
+ewe = ewe + ewe_i;
+ewd = ewd + ewd_i;
+%end;
+
+end;
+
+EUU = (dvd || j(nbeta,1,0) ) // ( ewd || ewe ) ;
+
+Vb2 = inv(EUU)*usq*inv(EUU`);
+
+     setheta=sqrt(vb2[nbeta+1,nbeta+1]);
+
+    corr =  ( (EXP(theta)-1)/(EXP(theta)+1) ) ;
+    secorr =
+2#(EXP(theta))/(EXP(theta)+1)/(EXP(theta)+1)#setheta;
+
+
+%if &print^=no %then %do;
+
+     z=corr/secorr;
+     zsq=z#z;
+     p=1-probchi(zsq,1);
+
+   /*print, corr secorr z p;*/
+
+   contrast= { 0  &c1 };
+   %contrast(c=c1);
+
+   contrast= { 0  &c2 };
+   %contrast(c=c2);
+
+%end;
+
+/*
+
+%if &outrho^=  %then %do;
+   coln = { 'rho' 'vrho' };
+   out = corr || (secorr#secorr)` ;
+create &outrho from out [colname=coln];
+append from out;
+close &outrho ; 
+%end;
+*/
+   coln = { 'rho' 'vrho' };
+   out = corr || (secorr#secorr)` ;
+create outrho from out [colname=coln];
+append from out;
+close outrho ;
+
+
+  quit;
+%end;
+
+%if &corr=ar1 %then %do;
+
+  data occas ( keep = &time );
+    set zzone;
+  run;
+
+proc iml worksize=5000;
+
+ reset nolog noprint;
+
+/*initial marginal parameters */
+
+   USE PAR;
+   READ ALL INTO BETA;
+beta=beta`;
+nbeta = nrow(beta);
+   USE Y;
+   READ ALL INTO Y;
+
+   USE X;
+   READ ALL INTO X;
+
+ nall =nrow(x);           /* number records in dataset, times*ind
+*/
+
+   USE ID;
+   READ ALL INTO ID;
+
+%if &weight^= %then %do;
+   USE WT;
+   READ ALL INTO WT;
+%end;
+
+ n = max(id);
+
+   USE occas;
+   READ ALL INTO occas;
+crit=1;
+  theta=.01;
+
+Do it=1 to &maxit while (crit > &crit );
+
+   U= J(Nbeta,1,0);
+   dvd= J(Nbeta,nbeta,0);
+   usq = dvd;
+   u2 = 0;
+   ewe = 0;
+
+Do i=1 to n;
+   u2_i = 0;
+   ewe_i = 0;
+    times = loc(id=i);
+    T_i = ncol(times);
+    Y_i = Y[times,];
+    X_i = X[times,];
+%if &weight^= %then %do;
+   wt_i = wt[times,];
+   wt_i = wt_i[1,];
+%end;
+    occas_i = occas[times,];
+    p_i = exp(X_i*beta)/(1 + exp(X_i*beta) );
+    A_i = Diag( diag(p_i) - p_i*p_i` );
+    D_i =  X_i`*A_i;
+
+  V_i = j(T_i,T_i,0);
+
+ if (T_i > 1) then do;
+  do s=1 to T_i;
+     do t=s+1 to T_i;
+
+
+ corr_st =  ( (EXP(theta)-1)/(EXP(theta)+1) )
+             ##( (abs( occas[s,] - occas[t,] ))## &power  );
+   DET = SQRT( p_i[s,]#p_i[t,]#(1-p_i[s,])#(1-p_i[t,]) );
+   Pst = p_i[s,]#p_i[t,] + corr_st#det;
+   c_st =  ( (EXP(theta)-1)/(EXP(theta)+1) )
+         ##( ( (-1) + (abs( occas[s,] - occas[t,] ))## &power) );
+   DOR = 2#(EXP(theta))/(EXP(theta)+1)/(EXP(theta)+1)#
+         det#( (abs( occas[s,] - occas[t,] ))## &power  )#c_st;
+
+%if &method=cond %then %do;
+
+   DOR = (Y_i[s,]/p_i[s,])#DOR -
+         (1-Y_i[s,])/(1-p_i[s,])#DOR ;
+
+   V_i[s,t] = pst - p_i[s,]#p_i[t,];
+   V_i[t,s] = pst - p_i[s,]#p_i[t,];
+
+   nust = (Y_i[s,]/p_i[s,])#pst +
+         (1-Y_i[s,])/(1-p_i[s,])#(p_i[t,] - pst) ;
+
+   u2_i = u2_i + Dor#( Y_i[t,] - nust )/(nust#(1-nust));
+  ewe_i = ewe_i + Dor#Dor/(nust#(1-nust));
+
+%end;
+
+%if &method=uncond %then %do;
+
+   V_i[s,t] = pst - p_i[s,]#p_i[t,];
+   V_i[t,s] = pst - p_i[s,]#p_i[t,];
+
+   u2_i = u2_i + Dor#( (Y_i[s,])#(Y_i[t,]) - pst )/(pst#(1-pst));
+   ewe_i = ewe_i + Dor#Dor/(pst#(1-pst));
+%end;
+
+     end;
+   end;
+end;
+   V_i = V_i + A_i;
+
+u_i = D_i*inv(V_i)*( Y_i - p_i );
+%if &weight^= %then %do;
+u = u + wt_i#u_i;
+usq = usq + wt_i#u_i*u_i`;
+dvd =  dvd + wt_i#D_i*inv(V_i)*D_i`;;
+
+u2 = u2 + wt_i#u2_i;
+ewe = ewe + wt_i#ewe_i;
+%end;
+%else %do;
+u = u + u_i;
+usq = usq + u_i*u_i`;
+dvd =  dvd + D_i*inv(V_i)*D_i`;;
+
+u2 = u2 + u2_i;
+ewe = ewe + ewe_i;
+%end;
+
+
+end;
+
+   DELTA1= solve( dvd, U );
+   beta = beta+DELTA1;
+
+   DELTA2= solve( ewe, U2 );
+   theta = theta + delta2;
+   CRIT= MAX( ABS(DELTA1 // delta2));
+
+
+%if &print^=no %then %do;
+   %if &it_his=yes %then %do;
+     print, it crit;
+   %end;
+%end;
+
+end;
+
+%if &print^=no %then %do;
+   print, it crit;
+%end;
+
+%if &int=no %then %do;
+variable = { &x };
+%end;
+%else %do;
+variable = { "INTERCEPT" } || { &x };
+%end;
+
+variable =   variable`;
+
+     vb=inv(dvd);       *variance matrix;
+
+     sebeta=sqrt(vecdiag(vb));      *vector of estimated
+                                       standard errors of
+                                       beta;
+
+     z=beta/sebeta;                   *z-statistics;
+
+     zsq=z#z;
+
+     p=1-probchi(zsq,1);              *two-sided p-value;
+
+estimate=beta;
+se_est=sebeta;
+
+%if &print^=no %then %do;
+   /*print, { 'Correlation Structure: AR1' };
+   print, { '                                   ' };
+   print, { 'PARAMETER ESTIMATES with naive variance' };
+   print, variable estimate se_est z p;*/
+%end;
+
+     vb=vb*usq*vb;              *robust variance matrix;
+
+     sebeta=sqrt(vecdiag(vb));      *vector of estimated
+                                       standard errors of
+                                       beta;
+
+     z=beta/sebeta;                   *z-statistics;
+
+     zsq=z#z;
+
+     p=1-probchi(zsq,1);              *two-sided p-value;
+
+se_est=sebeta;
+
+%if &print^=no %then %do;
+     /*print, { 'PARAMETER ESTIMATES with robust variance' };
+     print, variable estimate se_est z p;*/
+%end;
+
+%if &outbeta^= %then %do;
+  vc= j(1,nbeta,'v');
+  coln = variable` || ( concat(vc,variable`) );
+  out = estimate` || (se_est#se_est)` ;
+  create &outbeta from out [colname=coln];
+  append from out;
+  close &outbeta;
+%end;
+
+/* Variance of CORR  */
+
+   U= J(Nbeta+1,1,0);
+   dvd= J(Nbeta,nbeta,0);
+   usq= J(Nbeta+1,nbeta+1,0);
+   ewe = 0;
+   ewd= J(1,nbeta,0);
+
+Do i=1 to n;
+   u2_i = 0;
+   ewe_i = 0;
+   ewd_i= J(1,nbeta,0);
+    times = loc(id=i);
+    T_i = ncol(times);
+    Y_i = Y[times,];
+    X_i =   X[times,];
+%if &weight^= %then %do;
+   wt_i = wt[times,];
+   wt_i = wt_i[1,];
+%end;
+    occas_i = occas[times,];
+    p_i = exp(X_i*beta)/(1 + exp(X_i*beta) );
+    A_i = Diag( diag(p_i) - p_i*p_i` );
+    D_i =  X_i`*A_i;
+
+  V_i = j(T_i,T_i,0);
+
+ if (T_i > 1) then do;
+  do s=1 to T_i;
+     do t=s+1 to T_i;
+
+ corr_st =  ( (EXP(theta)-1)/(EXP(theta)+1) )
+             ##( (abs( occas[s,] - occas[t,] ))## &power  );
+   DET = SQRT( p_i[s,]#p_i[t,]#(1-p_i[s,])#(1-p_i[t,]) );
+   Pst = p_i[s,]#p_i[t,] + corr_st#det;
+   c_st =  ( (EXP(theta)-1)/(EXP(theta)+1) )
+           ##( ( (-1) + (abs( occas[s,] - occas[t,] ))## &power)
+);
+   DOR = 2#(EXP(theta))/(EXP(theta)+1)/(EXP(theta)+1)#
+         det#( (abs( occas[s,] - occas[t,] ))## &power  )#c_st;
+
+DPs = p_i[t,] + .5#corr_st#p_i[t,]#(1-p_i[t,])#(1-2#p_i[s,])/DET;
+DPt = p_i[s,] + .5#corr_st#p_i[s,]#(1-p_i[s,])#(1-2#p_i[t,])/DET;
+
+   V_i[s,t] = pst - p_i[s,]#p_i[t,];
+   V_i[t,s] = pst - p_i[s,]#p_i[t,];
+
+%if &method=cond %then %do;
+
+   DOR = (Y_i[s,]/p_i[s,])#DOR -
+         (1-Y_i[s,])/(1-p_i[s,])#DOR ;
+
+   nust = (Y_i[s,]/p_i[s,])#pst +
+         (1-Y_i[s,])/(1-p_i[s,])#(p_i[t,] - pst) ;
+
+   DPs = Y_i[s,]#( DPs/p_i[s,] - pst/( (p_i[s,])##2 ) ) +
+(1-Y_i[s,])#( (-1)#DPs/(1-p_i[s,])+(p_i[t,]- pst)/(
+(1-p_i[s,])##2 ) );
+
+ DPt = Y_i[s,]#( DPt/p_i[s,]  ) +
+(1-Y_i[s,])#( (1-DPt)/(1-p_i[s,]) );
+
+DP = Dps // Dpt;
+DB = D_i[,s] || D_i[,t];
+DB = DB*DP;
+
+   u2_i = u2_i + Dor#( Y_i[t,] - nust )/(nust#(1-nust));
+  ewe_i = ewe_i + Dor#Dor/(nust#(1-nust));
+  ewd_i = ewd_i + Dor*( 1/(nust#(1-nust) ) )*db`;
+
+%end;
+
+%if &method=uncond %then %do;
+
+DPs = p_i[t,] + .5#corr_st#p_i[t,]#(1-p_i[t,])#(1-2#p_i[s,])/DET;
+DPt = p_i[s,] + .5#corr_st#p_i[s,]#(1-p_i[s,])#(1-2#p_i[t,])/DET;
+
+DP = Dps // Dpt;
+DB = D_i[,s] || D_i[,t];
+DB = DB*DP;
+
+   u2_i = u2_i + Dor#( Y_i[s,]#Y_i[t,] - pst )/(pst#(1-pst));
+  ewe_i = ewe_i + Dor#Dor/(pst#(1-pst));
+  ewd_i = ewd_i + Dor*( 1/(pst#(1-pst) ) )*db`;
+%end;
+
+     end;
+   end;
+end;
+   V_i = V_i + A_i;
+
+u_i = ( D_i*inv(V_i)*( Y_i - p_i ) ) // u2_i;
+%if &weight^= %then %do;
+usq = usq +  wt_i#u_i*u_i`;
+dvd =  dvd +  wt_i#D_i*inv(V_i)*D_i`;;
+
+ewe = ewe +  wt_i#ewe_i;
+ewd = ewd +  wt_i#ewd_i;
+%end;
+%else %do;
+usq = usq + u_i*u_i`;
+dvd =  dvd + D_i*inv(V_i)*D_i`;;
+
+ewe = ewe + ewe_i;
+ewd = ewd + ewd_i;
+%end;
+
+
+
+end;
+
+EUU = (dvd || j(nbeta,1,0) ) // ( ewd || ewe ) ;
+
+Vb2 = inv(EUU)*usq*inv(EUU`);
+
+     setheta=sqrt(vb2[nbeta+1,nbeta+1]);
+
+
+    corr =  ( (EXP(theta)-1)/(EXP(theta)+1) ) ;
+    secorr =
+2#(EXP(theta))/(EXP(theta)+1)/(EXP(theta)+1)#setheta;
+
+%if &print^=no %then %do;
+     z=corr/secorr;
+     zsq=z#z;
+     p=1-probchi(zsq,1);
+     /*print, { "POWER = &power" };
+     print, corr secorr z p;*/
+
+%if &k_j^= %then %do;
+
+    t_s = { &k_j };
+    t_s = t_s`;
+    its = t_s## &power;
+    lnc = its*log(corr);
+    vlnc = its*( (secorr/corr)##2 )*its`;
+    corr = exp(lnc);
+    vcorr = diag(corr)*vlnc*diag(corr);
+    secorr =sqrt(vecdiag(vcorr));
+    k_j = t_s;
+    print k_j corr secorr;
+
+  %end;
+%end;
+
+   contrast= { 0  &c1 };
+   %contrast(c=c1);
+
+   contrast= { 0  &c2 };
+   %contrast(c=c2);
+
+%if &outrho^= %then %do;
+   coln = { rho vrho };
+   out = corr || (secorr#secorr)` ;
+   create &outrho from out [colname=coln];
+   append from out;
+   close &outrho;
+%end;
+
+  quit;
+%end;
+%end;
+
+%if &corr = banded or &corr = un %then %do;
+
+proc freq data=zzone;
+ tables &time /out=new noprint;
+run;
+
+data new (keep=&time ordt);
+  set new;
+  ordt+1;
+run;
+
+data occas ( keep = &time junk);
+set zzone;
+junk+1;
+run;
+
+proc sort data= occas;
+  by &time;
+run;
+
+data occas(keep=junk ordt);
+ merge occas new;
+ by &time;
+ run;
+
+proc sort data=occas out=occas(drop=junk);
+ by junk;
+ run;
+
+proc iml worksize=5000;
+
+ reset nolog noprint;
+
+%if &corr = banded %then %do;
+  corr = 3;
+%end;
+
+%if &corr = un %then %do;
+  corr = 4;
+%end;
+
+/*initial marginal parameters */
+
+   USE PAR;
+   READ ALL INTO BETA;
+beta=beta`;
+nbeta = nrow(beta);
+   USE Y;
+   READ ALL INTO Y;
+
+maxy = 2;                 /* # levels of multinomial */
+
+   USE X;
+   READ ALL INTO X;
+
+ nall =nrow(x);           /* number records in dataset, times*ind */
+
+   USE ID;
+   READ ALL INTO ID;
+
+%if &weight^= %then %do;
+   USE WT;
+   READ ALL INTO WT;
+%end;
+
+
+ n = max(id);             /* number of indiv. (clusters) */
+
+ npair =0;                /* number of pairs of times    */
+ maxt = 0;                /* maximum # times an indiv was seen */
+do i=1 to n;
+  times = loc(id=i);
+  times = ncol(times);
+   npair =  npair + times#(times-1);
+  if times > maxt then maxt=times;
+end;
+
+Imaxt = I(maxt);
+
+   USE occas;
+   READ ALL INTO occas;
+
+crit=1;
+
+Do it=1 to &maxit while (crit > &crit);
+
+   U= J(Nbeta,1,0);
+   dvd= J(Nbeta,nbeta,0);
+   usq = dvd;
+
+/* ***************** Correlation matrix ******************** */
+
+  R=j(maxt#(maxy-1),maxt#(maxy-1),0);
+  obs=R;
+  Do i=1 to n;
+    free Y_i X_i p_i A_i ;
+    times = loc(id=i);
+    T_i = ncol(times);
+    Y_i = Y[times,];
+    X_i = X[times,];
+%if &weight^= %then %do;
+   wt_i = wt[times,];
+   wt_i = wt_i[1,];
+%end;
+
+    occas_i = occas[times,];
+
+    p_i = exp(X_i*beta)/(1 + exp(X_i*beta) );
+    A_i = Diag( diag(p_i) - p_i*p_i` );
+if T_i > 1 then do;
+      e_i = inv(sqrt(A_i)) * (Y_i - p_i);
+      I_i = Imaxt[,occas_i`];
+      e_i = I_i*e_i;
+      obs_i = I_i[,+];
+      obs = obs + wt_i#obs_i*obs_i`;
+%if &weight^= %then %do;
+      R = R + wt_i#e_i*e_i`;
+%end;
+%else %do;
+      R = R + e_i*e_i`;
+%end;
+    end;
+end;
+
+if corr = 4 then do;
+      R = R/(obs-nbeta);
+  ch = 1 - ( (I(maxt)) @ j(maxy-1,maxy-1,1) );
+  R = ch#R + I(nrow(R));
+end;
+
+if corr = 3 then do;
+    free co;
+  do ti = 2 to maxt;
+      ch = j(maxy-1,maxt#(maxy-1),0);
+      ch[, (ti-1)#(maxy-1)+1 : ti#(maxy-1) ] = j(maxy-1,maxy-1,1);
+      ch = toeplitz(ch);
+      R_st = ch#R;
+      obs_st = ch#obs;
+      ch = j(maxt,1,1) @ i(maxy-1) ;
+      R_st = (ch`*R_st*ch/2)/(ch`*obs_st*ch/2-nbeta);
+      co = co || R_st;
+  end;
+    R = I(maxy-1) || co;
+    R = toeplitz(R);
+end;
+
+/* **************END Correlation matrix ******************** */
+
+Do i=1 to n;
+    free Y_i X_i p_i A_i ;
+    times = loc(id=i);
+    T_i = ncol(times);
+    Y_i = Y[times,];
+    X_i = X[times,];
+    occas_i = occas[times,];
+%if &weight^= %then %do;
+   wt_i = wt[times,];
+   wt_i = wt_i[1,];
+%end;
+
+
+    p_i = exp(X_i*beta)/(1 + exp(X_i*beta) );
+    A_i = Diag( diag(p_i) - p_i*p_i` );
+    D_i =  X_i`*A_i;
+
+      I_i = Imaxt[occas_i`,];
+      A_i1_2 = sqrt(A_i);
+if T_i > 1 then do;
+         V_i = A_i1_2*I_i*R*I_i`*A_i1_2;
+end;
+if T_i = 1 then do;
+         V_i = A_i ;
+end;
+
+u_i = D_i*inv(V_i)*( Y_i - p_i );
+
+%if &weight^= %then %do;
+u = u +wt_i# u_i;
+usq = usq + wt_i#u_i*u_i`;
+dvd =  dvd + wt_i#D_i*inv(V_i)*D_i`;;
+%end;
+%else %do;
+u = u + u_i;
+usq = usq + u_i*u_i`;
+dvd =  dvd + D_i*inv(V_i)*D_i`;;
+%end;
+
+end;
+
+
+   DELTA= solve( dvd, U );
+   beta = beta+DELTA;
+   CRIT= MAX( ABS(DELTA));
+
+
+%if &print^=no %then %do;
+   %if &it_his=yes %then %do;
+     print, it crit;
+   %end;
+%end;
+
+end;
+
+%if &print^=no %then %do;
+    create outcorr from R;
+    append from R;
+    close outcorr;
+    print, it crit;
+%end;
+
+%if &int=no %then %do;
+variable = { &x };
+%end;
+%else %do;
+variable = { "INTERCEPT" } || { &x };
+%end;
+
+variable =   variable`;
+
+     vb=inv(dvd);       *variance matrix;
+
+     sebeta=sqrt(vecdiag(vb));      *vector of estimated
+                                       standard errors of
+                                       beta;
+
+     z=beta/sebeta;                   *z-statistics;
+
+     zsq=z#z;
+
+     p=1-probchi(zsq,1);              *two-sided p-value;
+
+estimate=beta;
+se_est=sebeta;
+
+%if &print^=no %then %do;
+  if corr=3 then do;
+   print, { 'Correlation Structure: Banded' };
+  end;
+  if corr=4 then do;
+   print, { 'Correlation Structure: Unstructured' };
+  end;
+   print, { '                                   ' };
+   print, { 'PARAMETER ESTIMATES with naive variance' };
+   print, variable estimate se_est z p;
+%end;
+
+     vb=vb*usq*vb;              *robust variance matrix;
+
+     sebeta=sqrt(vecdiag(vb));      *vector of estimated
+                                       standard errors of
+                                       beta;
+
+     z=beta/sebeta;                   *z-statistics;
+
+     zsq=z#z;
+
+     p=1-probchi(zsq,1);              *two-sided p-value;
+
+se_est=sebeta;
+
+%if &print^=no %then %do;
+     /*print, { 'PARAMETER ESTIMATES with robust variance' };
+     print, variable estimate se_est z p;*/
+%end;
+
+%if &outbeta^= %then %do;
+  vc= j(1,nbeta,'v');
+  coln = variable` || ( concat(vc,variable`) );
+  out = estimate` || (se_est#se_est)` ;
+  create &outbeta from out [colname=coln];
+  append from out;
+  close &outbeta;
+%end;
+
+%if &print^=no %then %do;
+   contrast= { 0  &c1 };
+   %contrast(c=c1);
+
+   contrast= { 0  &c2 };
+   %contrast(c=c2);
+%end;
+  free /;
+  quit;
+
+%if &print^=no %then %do;
+%if &corr = banded %then %do;
+  title 'Banded Correlation Matrix';
+%end;
+%if &corr = un %then %do;
+  title 'Unstructured Correlation Matrix';
+%end;
+proc print data= outcorr;
+  run;
+%end;
+
+%end;
+title '               ';
+
+%mend gee;

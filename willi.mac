@@ -1,0 +1,403 @@
+%macro kappast(dataset=,id=,margin=1,xcorr=,y=,time=,x=,
+               maxit=,criteria=);
+
+/* This macro calculates the kappa coefficient for evaluating the
+fit of ordered categorical response models. */
+
+%* id = 1 to n;
+%* category = 1 to K; %* K is denoted by maxy;
+
+data one; set &dataset; one=1; run;
+data one; set one; by &id; if first.&id then idm+1; run;
+proc sort data=one; by &id; run;
+
+data y ( keep = &y ); set one; run;
+data time ( keep = &time ); set one; run;
+data x ( keep = &x ); length &x 8; set one; run;
+data id ( keep = idm ); set one; run;
+
+ods select wis;
+proc iml; reset nolog noprint;
+/*initial marginal parameters */
+
+   USE Y;  READ ALL INTO Y;
+   USE ID; READ ALL INTO ID;
+   USE X;  READ ALL INTO X;
+nx = ncol(x);            /* nx = # of marginal covariates */
+numcov=nx+1;
+initial = y || x; create best from initial; append from initial; close best;
+
+%macro colname(name,number);
+   %do r=2 %to &number;
+      &name&r
+      %end;
+   %mend colname;
+quit;
+
+/* uses PROC LOGIST to get initial estimates for BETA */
+%if &margin = 1 %then %do;
+proc logist data=one outest=esti noprint;
+    model &y=&x;
+run;
+%end;
+%if &margin = 0 %then %do;
+proc logist data=one outest=esti noprint;
+    model col1 = &y=&x / link=NORMIT;
+run;
+%end;
+
+data par(drop=_type_ _name_ _link_ _lnlike_);
+    set esti;
+    if (_type_ ne 'PARMS') then delete;
+run;
+
+proc iml ; reset nolog noprint;
+
+   USE ID; READ ALL INTO ID;
+n = max(id);            /* total number of persons (clusters) */
+                          
+   USE Y; READ ALL INTO Y;
+maxy = max(y);                 /* # of categories of response */
+stop = maxy - 1;
+trans = j(stop,stop,1);    /* cumulative transform matrix */
+do r = 1 to stop;
+ do c = 1 to stop;
+  if c > r then do;
+    trans[r,c]=0;
+  end;
+ end;
+end;
+transinv = inv(trans);
+
+   USE PAR; READ ALL INTO BETA;
+beta = beta`; 
+nbeta = nrow(beta); 
+nbetaall = nbeta + stop;     
+betaall = j(nbetaall,1,0);
+do j=1 to nbeta;
+   betaall[j,1] = beta[j,1];
+end;
+do j=nbeta+1 to nbetaall;
+   betaall[j,1] = 1.0 / maxy;
+end;
+   
+   USE X;    READ ALL INTO X;
+   USE TIME; READ ALL INTO TIME;  
+nt = max(time);                 
+
+nalpha = 1;
+alpha = 0.0;
+
+crit1=1;
+Do it=1 to &maxit while (crit1 > &criteria);
+  *print betaall;
+
+   U1 = j( nbetaall, 1, 0);
+   dvd = j( nbetaall, nbetaall, 0);
+   u1sq = dvd;
+
+Do i=1 to n;
+   free times T_i Yvar_i Xvar_i time_i Y_it Y_i X_it X_i mp_it 
+        p_it p_i D_it D_i D_i1 V_it V_i V_i1 u1_i;
+   
+   times = loc(id=i);
+   T_i = ncol(times);
+   Yvar_i = Y[times,]; 
+   Xvar_i = X[times,];
+   time_i = TIME[times,];   
+   V_i = 0;
+   
+   Do j=1 to T_i;          
+      Y_it = j(maxy,1,0);
+      Y_it[ Yvar_i[j,] , 1 ] = 1;
+      Y_it = Y_it[1:stop,1];
+      Y_i = Y_i // Y_it;
+
+      X_it = j(stop,1,1) @ Xvar_i[j,];
+      X_it = I(stop) || X_it;
+      X_i = X_i // X_it;
+
+      %if &margin = 1 %then %do;
+         mp_it = exp(X_it*beta)/(1 + exp(X_it*beta) );
+      %end;
+      %if &margin = 0 %then %do;
+         mp_it = probnorm(X_it*beta);
+      %end;
+   
+      p_it = transinv*mp_it;
+      p_i = p_i // p_it;
+
+      %if &margin = 1 %then %do;
+         D_it =  X_it`*Diag( mp_it#(1-mp_it) )*transinv`;
+      %end;
+      %if &margin = 0 %then %do;
+         D_it =  X_it`*Diag( ( 1/sqrt( 4#arcos(0) ) )
+         #exp( (-1/2) # ( (X_it*beta)##2 ) ) )*transinv`;
+      %end;
+      D_i = D_i || D_it;
+
+      V_it = diag(p_it) - p_it*p_it`;
+      V_i = Block(V_i,V_it);
+   end;
+
+   Y_i = Y_i // Y_i;
+
+   Do j=1 to T_i;  
+      Do k=1 to stop;                                            
+         p_i = p_i // betaall[nbeta+k,1];
+      end;
+   end;
+
+   D_i1 = j(stop,T_i*stop,0);                                          
+   Do j=1 to T_i;          
+      D_i = D_i || j(nbeta,stop,0);      
+      D_i1 = D_i1 || I(stop);
+   end;
+   D_i = D_i // D_i1;                                                  
+                                                         
+   nrV = nrow(V_i);
+   V_i = V_i[2:nrV,2:nrV];
+   V_i = V_i || j(T_i*stop,T_i*stop,0);   
+   V_i1 = j(T_i*stop,T_i*stop,0) || I(T_i*stop);
+   V_i = V_i // V_i1;   
+
+u1_i = D_i*inv(V_i)*( Y_i - p_i );  
+U1 = U1 + u1_i;                * the first set of equations;
+u1sq = u1sq + u1_i*u1_i`;      * estimate of sigma 1,1 matrix;
+dvd =  dvd + D_i*inv(V_i)*D_i`;                  
+end;               * this ends the loop over each person for B;
+
+   DELTA1 = solve( dvd, U1 );            
+   betaall = betaall + DELTA1;
+   crit1 = max( ABS(DELTA1));
+    *print, it crit1;
+
+end;                       * this ends the loop over each iteration;
+Do j=1 to nbeta;
+   beta[j,1] = betaall[j,1];
+end;
+ 
+
+* This section calculates Pe - Expected probabilities under intercept
+  only model;
+
+Pe = j(nt,1,0);                                  
+betalast = 1.0;              
+Do k=1 to stop;
+   betalast = betalast - betaall[nbeta+k,1];
+end;
+                                                        
+Do j=1 to nt;
+   Do k=1 to stop;
+      Pe[j,1] = Pe[j,1] + ( (betaall[nbeta+k,1]) ** 2 ); 
+   end;
+   Pe[j,1] = Pe[j,1] + (betalast ** 2);
+end;
+*print Pe;
+
+crit2 = 1;  
+Do it=1 to &maxit while (crit2 > &criteria);
+
+   U2 = j( nalpha, 1, 0);
+   cwc = j( nalpha, nalpha, 0);
+   cwe = j( nalpha, nbetaall, 0);
+   u2sq = cwc;
+   u12sq = j( nbetaall, nalpha, 0);
+
+   * This part calculates kappa;
+     kappa = (exp(alpha) - 1.0) / (exp(alpha) + 1.0);
+     dkapdalp = 2.0*exp(alpha)/( (exp(alpha)+1.0) ** 2);    
+     *print, alpha, kappa, dkapdalp;
+
+Do i=1 to n;
+   free times T_i Yvar_i Xvar_i time_i Y_it Y_i X_it X_i mp_it 
+     p_it p_itlast tempp_it tempp_i p_i D_it D_itlast tempD_it 
+     tempD_i D_i D_i1 V_it V_i V_i1 U_it U_i W_i theta_it theta_i 
+     C_it C_i u1_i u2_i;
+
+   times = loc(id=i);
+   T_i = ncol(times);
+   Yvar_i = Y[times,]; 
+   Xvar_i = X[times,];
+   time_i = TIME[times,]; 
+   V_i = 0;
+   
+   Do j=1 to T_i;
+      Y_it = j(maxy,1,0);
+      Y_it[ Yvar_i[j,] , 1 ] = 1;
+      Y_it = Y_it[1:stop,1];
+      Y_i = Y_i // Y_it;
+
+      X_it = j(stop,1,1) @ Xvar_i[j,];
+      X_it = I(stop) || X_it;
+      X_i = X_i // X_it;
+
+      %if &margin = 1 %then %do;
+         mp_it = exp(X_it*beta)/(1 + exp(X_it*beta) );
+      %end;
+      %if &margin = 0 %then %do;
+         mp_it = probnorm(X_it*beta);
+      %end;
+   
+      p_it = transinv*mp_it;
+      p_i = p_i // p_it; 
+
+      p_itlast = 1.0 - mp_it[stop,1];
+      tempp_it = p_it // p_itlast;
+      tempp_i = tempp_i // tempp_it;
+     
+      %if &margin = 1 %then %do;
+         D_it = X_it`*Diag( mp_it#(1-mp_it) )*transinv`;
+         D_itlast = -X_it[stop,]`*mp_it[stop,1]*(1-mp_it[stop,1]);
+      %end;
+      %if &margin = 0 %then %do;
+         D_it = X_it`*Diag( ( 1/sqrt( 4#arcos(0) ) )
+            #exp( (-1/2) # ( (X_it*beta)##2 ) ) )*transinv`;
+         D_itlast = -X_it[stop,]`*Diag( 1/sqrt( 4#arcos(0) ) )
+            *exp( (-1/2) * ( (X_it[stop,]*beta)**2 ) );
+      %end;
+      
+      tempD_it = D_it || D_itlast;
+      tempD_i = tempD_i || tempD_it;
+      D_i = D_i || D_it;
+
+      V_it = diag(p_it) - p_it*p_it`;
+      V_i = Block(V_i,V_it);
+
+      U_it = tempp_it[Yvar_i[j,],1];
+      U_i = U_i // U_it; 
+
+      theta_it = kappa * (1.0 - Pe[j,1]) + Pe[j,1]; 
+      theta_i = theta_i // theta_it;
+
+      C_it = dkapdalp * (1.0 - Pe[j,1]);
+      C_i = C_i || C_it;
+   end;
+
+   Y_i = Y_i // Y_i;
+   
+   Do j=1 to T_i;  
+      Do k=1 to stop;                                            
+         p_i = p_i // betaall[nbeta+k,1];
+      end;
+   end;
+
+   D_i1 = j(stop,T_i*stop,0);                                          
+   Do j=1 to T_i;          
+      D_i = D_i || j(nbeta,stop,0);      
+      D_i1 = D_i1 || I(stop);
+   end;
+   D_i = D_i // D_i1;                                                  
+                                                         
+   nrV = nrow(V_i);
+   V_i = V_i[2:nrV,2:nrV];
+   V_i = V_i || j(T_i*stop,T_i*stop,0);   
+   V_i1 = j(T_i*stop,T_i*stop,0) || I(T_i*stop);
+   V_i = V_i // V_i1;   
+
+   W_i = I(T_i);
+
+   E_i = j(T_i,nbetaall, 0); E1_i = E_i; E2_i = E_i;
+   Do j=1 to T_i;
+      Do k=1 to nbeta;
+         E1_i[j,k] = tempD_i[k,(j-1)*maxy+Yvar_i[j,]]; 
+      end;
+   end;
+   Do j=1 to T_i;
+     Do k=1 to stop;
+       E2_i[j,nbeta+k] = 2.0*p_i[T_i*stop+(j-1)*stop+k,1] - betalast;
+     end;
+   end;
+   E2_i = 2 * (1.0 - kappa) * E2_i;    
+   E_i = E1_i - E2_i;
+
+u1_i = D_i*inv(V_i)*( Y_i - p_i );
+u2_i = C_i*inv(W_i)*( U_i - theta_i );
+U2 = U2 + u2_i;              * the second set of equations;
+u2sq = u2sq + u2_i*u2_i`;    * estimate of sigma 2,2 matrix;
+u12sq = u12sq + u1_i*u2_i`;  * estimate of sigma 1,2 matrix;
+cwc =  cwc + C_i*inv(W_i)*C_i`;
+cwe = cwe - C_i*inv(W_i)*E_i;
+end;              * this ends the loop over each person for kappa;
+
+   DELTA2 = solve( cwc, U2 );
+   alpha = alpha + DELTA2;
+   crit2 = max(ABS(DELTA2));
+   *print, it crit2;
+
+end;                      * this ends the loop over each iteration;
+
+crit = max(crit1,crit2);
+*print, it crit;
+intc = { "int" };
+do j=1 to stop;
+  intn = char(j,1);
+  int = concat(intc,intn);
+  variabl1 = variabl1 || int;    /* this puts the names of the */
+end;                             /* beta parameters into variabl1 */
+variabl1 = variabl1 || { &x };
+variabl1 = variabl1`;
+variabl2 = { &xcorr }; /* this puts the names of the correlation */
+variabl2 = variabl2`;   /* parameters into variabl2 */
+
+     B11 = dvd; B22 = cwc;
+     B21 = inv(B22)*cwe*inv(B11);
+     vb = inv(B11);       *variance matrix of beta estimates;
+     va = B21*B11*B21` + inv(B22)*u12sq`*B21` +
+          B21*u12sq*inv(B22) + inv(B22);
+                         *variance matrix of alpha estimates;
+     sebeta = sqrt(vecdiag(vb));      *vector of estimated
+                                       standard errors of
+                                       beta;
+     sealpha = sqrt(vecdiag(va));      *vector of estimated
+                                        standard errors of
+                                        alpha;
+     z1 = betaall/sebeta;                 *z-statistics for beta;
+     z2 = alpha/sealpha;               *z-statistics for alpha;
+     zsq1 = z1#z1; zsq2 = z2#z2;
+     p1 = 1 - probchi(zsq1,1);     *two-sided p-value for beta;
+     p2 = 1 - probchi(zsq2,1);    *two-sided p-value for alpha;
+     estimat1 = betaall;  se_est1 = sebeta;
+     estimat2 = alpha; se_est2 = sealpha;
+
+     *print, { 'PARAMETER ESTIMATES with naive variance' };
+     *print, variabl1 estimat1 se_est1 z1 p1;
+     *print, variabl2 estimat2 se_est2 z2 p2;
+
+     vb = vb * u1sq * vb;    *robust variance matrix of beta;
+     sebeta = sqrt(vecdiag(vb));   *vector of estimated robust
+                                    standard errors of beta;
+     va = B21*u1sq*B21` + inv(B22)*u12sq`*B21`
+        + B21*u12sq*inv(B22) + inv(B22)*u2sq*inv(B22);
+                                   *robust variance matrix of alpha;
+     sealpha = sqrt(vecdiag(va));   *vector of estimated robust
+                                    standard errors of alpha;
+     z1 = betaall/sebeta;              *z-statistics for beta;
+     z2 = alpha/sealpha;           *z-statistics for alpha;
+     zsq1 = z1#z1;
+     zsq2 = z2#z2;
+     p1 = 1 - probchi(zsq1,1);    *two-sided p-value for beta;
+     p2 = 1 - probchi(zsq2,1);    *two-sided p-value for alpha;
+     se_est1 = sebeta;
+     se_est2 = sealpha;
+     kappa = (exp(alpha) - 1.0) / (exp(alpha) + 1.0);
+     dkapdalp = 2.0*exp(alpha)/( (exp(alpha)+1.0) ** 2);
+     sekappa = sealpha * dkapdalp;
+     
+      *print, { 'PARAMETER ESTIMATES with robust variance' };
+      *print, variabl1 estimat1 se_est1 z1 p1;
+      *print, variabl2 estimat2 se_est2 z2 p2;
+     *print, vb; *print, va;
+      *print, kappa;  
+      *print, sekappa;
+     /* create wis var{kappa sekappa}*/
+      x=kappa || sekappa;
+      edit wis;
+      setout wis;
+      append from x;
+      free x;
+      close wis;
+      free /;
+quit;
+%mend kappast;
+

@@ -1,0 +1,221 @@
+
+/*inde should begin from 1, not 0**/
+
+%macro sell(dataset=,id=,y=,x=,inde2=,
+       t=, maxit=,criteria=,type=);
+
+%* id = 1 to n;
+%* time = 1 or 2;
+
+
+data one;
+   set &dataset;
+   index=_N_;
+run;
+
+data one;
+  set one;
+  by &id;                      /* puts dataset into 'one' */
+  if first.&id then idm+1;
+run;
+
+proc sort data=one;
+  by &id;
+run;
+
+data y ( keep =index &y );
+  set one;
+run;
+
+
+data x ( keep =index &x );
+  length &x 8;
+  set one;
+run;
+
+
+data id ( keep =index idm );
+  set one;
+run;
+
+data inde(keep=index &inde2);
+  set one;
+run;
+
+
+/**corrw contains the estimated working correlation matrix**/
+
+ods select sell;
+ods output GEEWCorr=corrw;
+
+/**obstats contains those observation statistics including predicted
+****values**/
+ods output ObStats=obstats;
+proc genmod data=one descending;
+     class &id;
+     model &y=&x / dist=binomial pred r ;
+     repeated subject=&id/corrw type=&type;
+run;
+
+ 
+data pi(keep=index pred); 
+   set obstats;
+   index=_N_;
+run;
+
+data two;
+  merge inde pi;
+  by index;
+  rename &inde2=inde;
+run;
+
+proc sort data=two;
+  by inde;
+run;
+
+proc univariate data=two noprint;
+  var pred;
+  by inde;
+  output out=three median=median;
+run;
+
+data three(keep= median);
+  set three;
+run;
+
+data three;
+  set three;
+  inde=_N_;
+run;
+
+data four;
+  merge two three;
+  by inde;
+run;
+
+data five;
+  set four;
+  if (pred le median) then inde1=2*inde-1;
+  else inde1=2*inde;
+run;
+
+proc sort data=five;
+  by index;
+run;
+
+data inde1(keep=inde1);
+  set five;
+run;
+
+data y ( keep =&y );
+  set y;
+run;
+
+
+data x ( keep =&x );
+  length &x 8;
+  set x;
+run;
+
+
+data id ( keep = idm );
+  set id;
+run;
+
+data pi(keep=pred);
+  set pi;
+run;
+     
+
+proc iml worksize=5000;
+reset nolog noprint;
+
+
+   USE ID;
+   READ ALL INTO ID;
+   n = max(id);             /* total number of persons */
+
+   USE Y;
+   READ ALL INTO Y;
+
+   USE X;
+   READ ALL INTO X; 
+   nx = ncol(x);        /* nxps = # of p-s covariates,excluding intercepts */
+
+   nbeta = nx+1;/*P+1*/
+   t=&t;
+   beta = j( nbeta, 1, 0);   /* gives initial estimate for beta */
+
+   
+   USE INDE1;
+   READ ALL INTO INDE1;
+   use corrw; read all into Rw;
+   use pi; read all into pi;
+   ntheta=max(inde1)-1;
+   U1 = j( nbeta, 1, 0);
+   U2 = j( ntheta, 1, 0);
+   A = j( nbeta, nbeta, 0);
+   Ar = A;
+   Br = j( ntheta, nbeta, 0);
+   Cr = j( ntheta, ntheta, 0);
+   B = Br;
+   C = Cr;
+
+                       * this part creates U and dvcovvd;
+   
+Do i=1 to n;
+   free Y_i X_i T_i A_i V_i  X2_i p_i D1_i D2_i ind_i k;
+       
+    times = loc(id=i);
+    T_i = ncol(times);   
+    Y_i = Y[times,];
+    X_i = j(t,1,1) || X[times,];
+    ind_i=inde1[times,];
+    X2_i=j(t,ntheta,0);
+  Do j=1 to t;
+   k=ind_i[t,1]-1;/*use the first category as reference*/
+   if k >0 then
+   X2_i[j,k]= 1;
+  end;
+    p_i = pi[times,];
+    A_i = Diag( diag(p_i) - p_i*p_i` );
+    V_i = sqrt(A_i)*Rw*sqrt(A_i);
+    D1_i = A_i*X_i;   
+    D2_i = A_i*X2_i;
+    u2_i = D2_i`*inv(V_i)*(Y_i - p_i);
+    U2 = U2 + u2_i;
+    Br = Br + D2_i`*inv(V_i)*(Y_i - p_i)*(Y_i - p_i)`*inv(V_i)*D1_i;
+    Cr = Cr + D2_i`*inv(V_i)*(Y_i - p_i)*(Y_i - p_i)`*inv(V_i)*D2_i;
+    B = B + D2_i`*inv(V_i)*D1_i;
+    C = C + D2_i`*inv(V_i)*D2_i;    
+    Ar = Ar + D1_i`*inv(V_i)*(Y_i - p_i)*(Y_i - p_i)`*inv(V_i)*D1_i;
+    A = A + D1_i`*inv(V_i)*D1_i;
+
+end;       * this ends the loop over each person for U and dvcovvd;
+
+Q = 0;
+QR = 0;
+V = C - B*inv(A)*B`;
+VR = Cr - Br*inv(Ar)*Br`;
+
+Q = U2` * ginv(V) * U2;
+QR = U2` * ginv(VR) * U2;
+df = round(trace(ginv(V)*V));
+dfr = round(trace(ginv(VR)*VR));
+
+x=Q || df || QR || dfr;
+
+
+edit sell;
+setout sell;
+append from x;
+free x;
+close sell;
+free /;
+quit;
+
+  /* result = estimat1` || se_est1` || Q || QR;
+   create out from result;
+   append from result;*/
+%mend sell;
+

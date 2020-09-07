@@ -1,0 +1,160 @@
+/* Goodness of fit for Logistic GEE models: 
+   Evans, Scott and Li, Lingling
+   Statistics in Medicine (2005) 24(8):1245-61.
+   evans@sdac.harvard.edu.
+
+   The program is provided "as is", without warranty of any kind, either
+   expressed or implied, including, but not limited to, the implied 
+   warranties of merchantability and fitness for a particular purpose.
+*/
+
+
+/* dataset: your dataset,
+   id: variable indicating which cluster the data belongs to
+   y: dependent variable
+   x: independent variables you want to add to your model
+   t: cluster size (the number of observations in one cluster)
+   type: Type of covariance matrix you want to specify for your logistic GEE model (see
+options of PROC GENMOD)
+   time: indicating the within-cluster order for each observation. e.g longitudinal
+study, time=1 means it is the first measurement for some patient.
+   inde: indicator variable for Barnhart's statistics (see paper for details)
+   inde2: indicator variable for our statistics (see paper for details) */
+
+%macro goflgee(dataset=,id=,y=,x=,t=,type=,time=,inde=,inde2=);
+
+/****Pan's statistic***/
+
+proc iml;
+  create pans var {G1 G2 U1 U2};  
+  create hts var{xsq df p};
+  create wis var{kappa sekappa};
+  create bhs var{Q dfq QR dfqr};
+  create sell var{Qs dfqs QRs dfqrs};
+
+
+data cluster;
+  set &dataset;
+run;
+
+
+%inc 'pan.mac';
+%pan(dataset=cluster,id=&id,y=&y,x=&x,t=&t,type=&type);
+run;
+
+
+/****Horton's statistic***/
+
+%inc 'horton.mac';
+%gee(data=cluster,y=&y,x=&x,id=&id, corr=ind);
+run;
+
+
+/****Barnhart's statistic***/
+%inc 'barn.mac';
+%barn(dataset=cluster, id=&id, t=&t,y=&y,x=&x,inde=&inde,maxit=25,
+      criteria=0.00001,type=&type);
+
+/*****New statitic***/
+%inc 'sell.mac';
+%sell(dataset=cluster,id=&id, y=&y,x=&x,
+      inde2=&inde2,maxit=25, criteria=0.00001,type=&type,t=&t);
+run;
+
+data kappa;
+  set cluster;
+  &y=&y+1;
+run;
+
+/****Williamson's statistic***/
+
+
+%inc 'willi.mac';
+%kappast(dataset=kappa,id=&id,margin=1,xcorr=alpha,y=&y,
+         time=&time,x=&x, maxit=50,criteria=0.00001);
+run;
+
+data out;
+   merge pans hts wis bhs sell;
+   pang1=2*(1-probnorm(abs(G1)));
+   pang2=2*(1-probnorm(abs(G2)));
+   panu1=2*(1-probnorm(abs(U1)));
+   panu2=2*(1-probnorm(abs(U2)));
+   hortp=P;
+   barnq=1-probchi(Q,DFQ);
+   barnqr=1-probchi(QR,DFQR);
+   sellq=1-probchi(Qs,dfqs);
+   sellqr=1-probchi(QRs,dfqrs);
+   if 0 le kappa le 0.2 then kappac=1;/*poor, fair, good, excellent*/
+   else if 0.2 lt kappa le 0.4 then kappac=2;
+   else if 0.4 lt kappa le 0.6 then kappac=3;   
+   else if 0.6 lt kappa le 1.0 then kappac=4;
+   keep G1 G2 U1 U2 XSQ DF KAPPA SEKAPPA Q DFQ QR DFQR Qs QRs pang1 pang2
+panu1
+       panu2 hortp barnq barnqr sellq sellqr kappac;
+run;
+
+data report;
+   set out;
+   length name $ 10;
+   keep name stat pvalue;
+   name='G1'; stat=G1; pvalue=pang1;
+   output;
+   name='G2'; stat=G2; pvalue=pang2;
+   output;
+   name='U1'; stat=U1; pvalue=panu1;
+   output;
+   name='U2'; stat=U2; pvalue=panu2;
+   output;
+  name='X2'; stat=xsq; pvalue=hortp;
+   output;
+  name='Q'; stat=Q; pvalue=barnq;
+   output;
+  name='Qr'; stat=QR; pvalue=barnqr;
+   output;
+  name='N'; stat=Qs; pvalue=sellq;
+   output;
+  name='Nr'; stat=QRs; pvalue=sellqr;
+   output;
+  name='Kappa'; stat=kappa; pvalue=kappac;
+   output;
+run;
+
+data report;
+   set report;
+   stat=round(stat, .0001);
+   pvalue=round(pvalue,.0001);
+run;
+
+title "GOF Statistics and Corresponding P-values the for Logistic GEE Model";
+proc report headline headskip split='$' missing spacing=1 ps=63 center;
+   column  name stat pvalue;
+   define name/ "Statistic" width=10;
+   define stat/ "Value"  width=20;
+   define pvalue/ "P-value"  width=20;
+   compute after ;
+      length text1 text2 text3  text4 text5 text6 text7 $70;
+      text1='G1, G2, U1, and U2 are statistics based on residuals.';
+      text2='X2 is statistic based on ranked estimated probabilities.';
+      text3='Q and Qr are statistics based on covariate partitioning.';
+      text4='N and Nr are Hybrid statistics.';
+      text5='Kappa is the classification statistic.';
+      text6='See "A Comparison of GOF Tests for the Logistic GEE model"';
+      text7='Submitted to Statistics in Medicine';
+      line '';
+      line 70*'=';
+      line @7 text1 $70.;
+      line @7 text2 $70.;
+      line @7 text3 $70.;
+      line @7 text4 $70.;
+      line @7 text5 $70.;
+      line @7 text6 $70.;
+      line @7 text7 $70.;
+      line 70*'=';
+  endcomp;
+
+run;
+
+
+%mend goflgee;
+

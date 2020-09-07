@@ -1,0 +1,1199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Lecture 14 (lab)—Thursday, February 18, 2010</title>
+
+<style type="text/css">
+<!--
+a:link {color: #0000CC; text-decoration:none}
+a:visited {color: #0000CC; text-decoration:none}
+a:hover {color: green; text-decoration:underline; background:#F9EDED}
+a:active {color: red; text-decoration:none}
+div.figure {float:none;width=25%;}
+div.figure p {test-align: center;font-style:italic;}
+div.figureL {float:left;width=50%; margin:1.5em;padding:4px 4px 4px 0px;}
+div.figureL p {test-align: center;font-style:italic;}
+div.figureR {float:right;width=50%;margin:1.5em;padding:4px 4px 4px 0px;}
+div.figureR p {test-align: center;font-family: Arial, Helvetica, sans-serif;font-size:11.0pt;}
+
+.subtd {margin-left: 2em;}
+
+.subtd2 {margin-left: 2em;
+   margin-right: 2em;}
+.eq { width: 100%; }
+.eq th { text-align: right;
+         vertical-align: absolute middle;
+		 font-weight: normal; }
+		 
+.style4 {	color: #CC0000;
+	font-weight: bold;
+}
+.style11 {font-family: "Courier New", Courier, mono;}
+.style22 {color: #663366; font-weight: bold; }
+.style10 {
+	font-family: "Courier New", Courier, mono;
+	color: #000000;
+	background-color:#F0F0F0;
+}
+.style33 {
+	font-family: "Courier New", Courier, mono;
+	color: #000000;
+	background-color:#FFFACD;
+}
+
+.style34 {font-family: "Courier New", Courier, mono; color: #339933; font-weight: bold; background-color:#FFFACD; }
+.style43 {color: #0000FF; font-weight: bold; font-family: "Courier New", Courier, mono;  background-color:#FFFACD;}
+
+
+.style24 {
+	font-family: "Courier New", Courier, mono;
+	color: #003399;
+	font-size:small;
+}
+
+.style25 {
+	font-family: "Courier New", Courier, mono;
+	color: #003399;
+	font-size:small;
+	background-color:#FFFC9A;
+}
+
+.style35 {color: #339933; font-weight: bold; font-family: "Courier New", Courier, mono; }
+.style15 {font-family: "Courier New", Courier, mono; color: #339933; font-weight: bold; background-color:#F0F0F0; }
+
+.style16 {font-family: "Courier New", Courier, mono; color: #339933; font-weight: bold;background-color:#C5E9EB; }
+.style17 {font-family: "Courier New", Courier, mono; color: #339933; font-weight: bold; }
+
+.style19 {color: #339933;
+	font-weight: bold;}
+.style40 {color: #0000FF; font-weight: bold; font-family: "Courier New", Courier, mono;}
+.style42 {color: #0000FF; font-weight: bold; font-family: "Courier New", Courier, mono;  background-color:#F0F0F0;}
+
+.style1 {font-family: "Courier New", Courier, mono;}
+
+.sasnavy {font-size:11.0pt;font-family:"Courier New"; font-weight: bold;
+color:navy;background:white; }
+
+.sasblack {font-size:11.0pt;font-family:"Courier New";
+color:black;background:white; }
+
+.sasblue {font-size:11.0pt;font-family:"Courier New";
+color:blue;background:white; }
+
+.saspurple {font-size:11.0pt;font-family:"Courier New";
+color:purple;background:white; }
+
+.sasteal {font-size:11.0pt;font-family:"Courier New";
+color:teal;background:white; }
+
+.sasgreen {font-size:11.0pt;font-family:"Courier New";
+color:green;background:white; }
+
+.sasblack9 {font-size:9.0pt;font-family:"Courier New";
+color:black;background:white; }
+
+.sasblue9 {font-size:9.0pt;font-family:"Courier New";
+color:blue;background:white; }
+.style41 {	color: #00C;
+	font-weight: bold;
+}
+
+.style61 {	color: #000000;
+	font-weight: bold;
+}
+
+.styleArial {
+	font-family: Arial, Helvetica, sans-serif;font-size:11.0pt;
+}
+.styleArial2 {
+	font-family: Arial, Helvetica, sans-serif;
+}
+.style66 {
+	font-family: Arial, Helvetica, sans-serif;
+}
+.stylecayenne {
+	color: #800000;
+}
+.style44 {font-family: "Courier New", Courier, mono}
+.style9 {	color: #339900;
+	font-weight: bold;
+}
+.style101 {font-family: "Courier New", Courier, mono}
+.style14 {color: #0000FF; font-size: smaller; font-family: "Courier New", Courier, mono; }
+.style14 {color: blue;
+	font-family: "Courier New", Courier, mono;}
+.style151 {font-family: "Courier New", Courier, mono; color: #009900; }
+.style31 {color: #336699; font-weight: bold; }
+.style32 {color: #333333;
+	font-weight: bold;
+}
+.style3 {	color: #CC0000;
+	font-weight: bold;
+}
+.style36 {	color: #660099;
+	font-weight: bold;
+}
+.style13 {font-size: smaller}
+.style331 {color: blue; font-family: "Courier New", Courier, mono; font-size: smaller; }
+.style91 {color: #FF0000; font-weight: bold; }
+.style191 {color: #009900; font-weight: bold; }
+.style102 {color: #CC0000;
+	font-weight: bold;
+}
+.style23 {	font-family: "Courier New", Courier, mono;
+	color: #000000;
+}
+.style241 {	font-family: "Courier New", Courier, mono;
+	color: #0000FF;
+}
+.style241 {color: blue; font-family: "Courier New", Courier, mono; font-size: smaller; }
+.style26 {font-family: "Courier New", Courier, mono}
+.style361 {color: #3333CC;
+	font-weight: bold;
+}
+-->
+</style>
+</head>
+
+<body>
+<h1 align="center"><a name="lecture14" id="lecture14"></a>Lecture 14 (lab 7)—Thursday, February 25, 2010</h1>
+<h2>Topics</h2>
+<ul>
+  <li><a href="#background">Background</a></li>
+  <li><a href="#Rgee">Generalized estimating equations using the gee package</a>  </li>
+  <li><a href="#choosing">Choosing a correlation structure</a></li>
+  <li><a href="#Rgeepack">Generalized estimating equations using the geepack package</a></li>
+  <li><a href="#binary">A binary mixed effects model</a></li>
+  <li><a href="#comparing">Comparing marginal and subject-specific models</a></li>
+  <li><a href="#cited">Cited references</a></li>
+</ul>
+<h3>R functions and commands demonstrated</h3>
+<ul>
+  <li><a href="#gee">gee</a> (from <span class="style19">gee</span>) for fitting GEE models</li>
+  <li><a href="#geeglm">geeglm</a> (from <span class="style19">geepack</span>) for fitting GEE models</li>
+  <li><a href="#binary">lmer</a> (from <span class="style19">lme4</span>) sets up and fits generalized linear and nonlinear mixed effects models</li>
+</ul>
+<h3>R function options</h3>
+<ul>
+  <li><a href="#corstr">corstr=</a> (argument to <span class="style102">gee</span> and <span class="style102">geeglm</span>) for defining the correlation structure within groups in a GEE model.</li>
+  <li><a href="#id">id=</a> (argument to<span class="style102">gee</span> and <span class="style102">geeglm</span>) is used to identify the grouping variable in a GEE model.</li>
+  <li><a href="#Mv">Mv</a>= (argument to <span class="style102">gee</span>) for specifying the order of an autoregressive process or the order of a stationary or nonstationary M_dep correlation matrix</li>
+  <li><a href="#scalefix">scale.fix</a>= (argument to<span class="style102"> gee</span> and <span class="style102">geeglm</span>) when set to TRUE causes the scale parameter to be fixed (by default at 1) rather than estimated.</li>
+  <li><a href="#waves">waves=</a> (argument to <span class="style102">geeglm</span>)
+ names a positive integer-valued variable that is used to identify the 
+order and spacing of observations within groups in a GEE model. This 
+argument is crucial when there are missing values and gaps in the data.</li>
+</ul>
+<h3>R packages used </h3>
+<ul>
+  <li><a href="#Rgee">gee</a> used for the function <span class="style102">gee</span> to fit GEE models</li>
+  <li><a href="#Rgeepack">geepack</a> used for the function <span class="style102">geeglm</span> to fit GEE models</li>
+  <li><a href="#binary">lme4</a> used for the function <span class="style102">lmer</span> to fit generalized linear mixed effects models</li>
+</ul>
+<h2><a name="background" id="background"></a>Background on the data</h2>
+<p>To illustrate the process of fitting GEE models in R, we use some 
+binary data analyzed in Fieberg et al. (2009). The goal of their study 
+was to relate nest occupancy by mallards (a binary response) to 
+surrounding land use characteristics and the type of nesting structure 
+that was provided. The authors provide R code for their analysis in a 
+supplemental document. As we'll see, the authors made some mistakes in 
+fitting their models. </p>
+<p> Individual nests were observed repeatedly over time and at each time point the nest was classified as occupied (<span class="style32">nesting2</span> = 1) or unoccupied (<span class="style32">nesting2</span> = 0) by mallards. If the nest was occupied by a  species other than mallard, no data were recorded or <span class="style32">nesting2</span> was assigned a missing value, NA. The available predictors include the following.</p>
+<ul>
+  <li><span class="style32">year</span>: the year of the observation (1997, 1998, 1999)</li>
+  <li><span class="style32">period</span>: the seasonal observation period (1, 2, 3, 4)</li>
+  <li><span class="style32">deply</span>: nest structure type (1 for single cylinder, 2 for double cylinder)</li>
+  <li><span class="style32">size</span>: the size of the wetland in which the nest structure was located</li>
+  <li><span class="style32">rblval</span>: a measure of visual obstruction around the nest</li>
+</ul>
+<p>A variable <span class="style32">strtno</span> identifies the  site at which measurements were made. Of these variables, <span class="style32">deply</span> and <span class="style32">size</span> were constant for a given nest site, while <span class="style32">year</span>, <span class="style32">period</span>, and <span class="style32">rblval</span> varied over time.  </p>
+<p>I load the data and display part of the records for the first two nesting sites in the data set.</p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">sm &lt;- read.table( 'http://www.unc.edu/courses/2010spring/ecol/562/001/data/lab7/sm003.txt', header=T, sep=',')</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">sm[1:16,]</div>
+<span class="style24">  &nbsp;&nbsp; strtno year period&nbsp;&nbsp;&nbsp; rblval deply nesting2&nbsp; size<br>
+  1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 
+1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 0.2255628&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 24.00<br>
+  2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 
+1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2 0.2274146&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 24.00<br>
+  3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 
+1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 0.8913011&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 24.00<br>
+  4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 
+1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 2.0374570&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 24.00<br>
+  5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 
+1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 0.3563867&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 24.00<br>
+  6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 
+1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2 0.3886405&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 24.00<br>
+  7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 
+1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 1.2367539&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;1 24.00<br>
+  8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 
+1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 2.1414228&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 24.00<br>
+  9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 
+1999&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 0.3138169&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 24.00<br>
+  10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 1999&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2
+ 0.4468211&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 24.00<br>
+  11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 1999&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3
+ 1.3173710&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 24.00<br>
+  12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 1999&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4
+ 2.0699900&nbsp;&nbsp;&nbsp; 
+&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 24.00<br>
+  13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1
+ 0.2280539&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp; 7.19<br>
+  14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2
+ 0.2280767&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp; 7.19<br>
+  15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3
+ 0.8641539&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp; 7.19<br>
+16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 
+2.0086747&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp; 7.19</span>
+<p>The largest number of observations per nest is 12, but some of the nests had fewer than 12 observations.</p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px"> max(table(sm$strtno))</div>
+<span class="style24">  [1] 12</span>
+<div class="style10" style="padding-left: 30px; text-indent:-30px"> names(table(sm$strtno))[table(sm$strtno)&lt;12]</div>
+<span class="style24">&nbsp;[1] "4"&nbsp;&nbsp; "30"&nbsp; "32"&nbsp; 
+"36"&nbsp; "56"&nbsp; "59"&nbsp; "61"&nbsp; "62"&nbsp; "64"&nbsp; "65" 
+&nbsp;"75" <br>
+  [12] "77"&nbsp; "86"&nbsp; "103" "106</span>
+<p>I examine the data from some of the nests with fewer than the maximum number of observations.</p>
+
+<div class="style10" style="padding-left: 30px; text-indent:-30px"> sm[sm$strtno %in% c(4,30,32),]</div>
+<span class="style24">&nbsp;&nbsp;&nbsp; strtno year period&nbsp;&nbsp;&nbsp; rblval deply nesting2&nbsp; size<br>
+37&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 
+1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 0.1716186&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp; 0.31<br>
+38&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 
+1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2 0.1725532&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp; 0.31<br>
+39&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 
+1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 0.8508596&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp; 0.31<br>
+40&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 
+1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 1.9599569&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp; 0.31<br>
+41&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 
+1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 0.3177463&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp; 0.31<br>
+42&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 
+1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2 0.3015640&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp; 0.31<br>
+43&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 
+1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 1.0184868&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp; 0.31<br>
+44&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 
+1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 2.0650446&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp; 0.31<br>
+345&nbsp;&nbsp;&nbsp;&nbsp; 30 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 
+0.1659685&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 26.41<br>
+346&nbsp;&nbsp;&nbsp;&nbsp; 30 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2 
+0.1800388&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 26.41<br>
+347&nbsp;&nbsp;&nbsp;&nbsp; 30 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 
+0.9642473&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 26.41<br>
+348&nbsp;&nbsp;&nbsp;&nbsp; 30 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 
+2.0531590&nbsp;&nbsp;&nbsp;&nbsp; 2&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1 26.41<br>
+349&nbsp;&nbsp;&nbsp;&nbsp; 30 1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 
+0.1911280&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 26.41<br>
+350&nbsp;&nbsp;&nbsp;&nbsp; 30 1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2 
+0.2608312&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 26.41<br>
+351&nbsp;&nbsp;&nbsp;&nbsp; 30 1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 
+1.2013512&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 26.41<br>
+352&nbsp;&nbsp;&nbsp;&nbsp; 30 1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 
+2.1466754&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 26.41<br>
+365&nbsp;&nbsp;&nbsp;&nbsp; 32 1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 
+0.1943395&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp; 3.48<br>
+366&nbsp;&nbsp;&nbsp;&nbsp; 32 1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2 
+0.2452308&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+NA&nbsp; 3.48<br>
+367&nbsp;&nbsp;&nbsp;&nbsp; 32 1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 
+1.2645853&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+NA&nbsp; 3.48<br>
+368&nbsp;&nbsp;&nbsp;&nbsp; 32 1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 
+2.2661940&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp; 3.48<br>
+369&nbsp;&nbsp;&nbsp;&nbsp; 32 1999&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 
+0.1227242&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp; 3.48<br>
+370&nbsp;&nbsp;&nbsp;&nbsp; 32 1999&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2 
+0.2371302&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp; 3.48<br>
+371&nbsp;&nbsp;&nbsp;&nbsp; 32 1999&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 
+1.2778317&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp; 3.48<br>
+372&nbsp;&nbsp;&nbsp;&nbsp; 32 1999&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 
+2.1876824&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp; 3.48</span>
+<p>Nests 4 and 30 are missing the last year of data, 1999. Nest 32 is 
+missing the first year of data but also seasons 2 and 3 in 1998. Because
+ values for the predictors were recorded at these two times but the 
+response, <span class="style32">nesting2</span>, is recorded as missing 
+(NA), we conclude that the nest was being occupied by a different 
+species. The unbalanced data and the presence of missing values in some 
+of the records will have an impact on the way models will need to be 
+fit. </p>
+<h2><a name="Rgee" id="Rgee2"></a>Generalized estimating equations using the gee package</h2>
+<p>The model Fieberg et al. (2009) choose to fit in all of their 
+examples is one that includes main effects for the five predictors <span class="style32">year</span>, <span class="style32">period</span>, <span class="style32">rblval</span>, <span class="style32">deply</span>, and <span class="style32">size,</span>  a quadratic term for <span class="style32">size</span>, and interactions between <span class="style32">period</span> and <span class="style32">year</span> as well as between <span class="style32">rblval</span> and <span class="style32">period</span>. The variables <span class="style32">year</span>, <span class="style32">period</span>, and <span class="style32">deply</span>
+ are recorded as numeric variables in the data set but need to be 
+treated as factors in the model. In R notation the basic logistic 
+regression model that we'll use  is the following.</p>
+<div class="style1" style="padding-left: 30px; text-indent:-30px">nesting2
+ ~ factor(year) + factor(period) + factor(deply) + rblval+ 
+factor(year)*factor(period) + rblval*factor(period) + size + I(size^2), 
+family=binomial, data=sm</div>
+<p>R has two packages that fit GEE models: the <span class="style19">gee</span> package and the <span class="style19">geepack</span>
+ package. Because there are slight differences in the algorithms used by
+ these packages, the results returned by them are not identical. 
+Although there is considerable overlap between the two packages, the <span class="style19">geepack</span> package offers a number of advantages  if there are missing data. </p>
+<p><a name="gee"></a>We'll start with the <span class="style19">gee</span> package. The  function in this package for fitting GEE models is the <span class="style102">gee</span> function. In addition to the  model syntax shown above <span class="style102">gee</span> requires two additional arguments: </p>
+<ol>
+  <li><a name="id"></a><span class="style22">id</span>= which is used to identify the grouping variable in the data set (within which observations are correlated).  For the <span class="style32">sm</span> data set the grouping variable is <span class="style32">strtno</span>. </li>
+  <li> <a name="corstr"></a><span class="style22">corstr</span>= which is used to identify the  correlation structure within groups (<span class="style22">id</span>).</li>
+</ol>
+<p>The <span class="style19">gee</span> package offers the following correlation structures for the <span class="style22">corstr</span> argument.</p>
+<ul>
+  <li><span class="style1">"independence"</span>: the observations within the groups are uncorrelated</li>
+  <li><span class="style1">"exchangeable"</span>: each pair of observations in a group has the same correlation</li>
+  <li><span class="style1">"unstructured"</span>: each pair of observations in a group is allowed to have a different correlation</li>
+  <li><span class="style1"><a name="Mv"></a>"AR-M"</span>: this is the <span class="style102">gee</span> code for an autoregressive structure. To obtain a specific autoregressive structure requires the additional argument <span class="style22">Mv</span>. For example <span class="style1">corstr="AR-M", Mv=1</span> yields an AR(1) structure, while <span class="style1">corstr="AR-M", Mv=2</span> yields an AR(2) structure.</li>
+  <li><span class="style1">"non_stat_M_dep"</span>: stands for nonstationary M-dependent and generates a banded correlation matrix. It also requires the <span class="style22">Mv</span> argument to denote the number of nonzero off-diagonal bands to estimate. Like <span class="style1">"AR-M"</span>, <span class="style1">"non_stat_M_dep"</span> assumes there is a natural order to the data. Like <span class="style1">"unstructured"</span>, <span class="style1">"non_stat_M_dep"</span> allows all the entries within the each nonzero band to be different. As an example <span class="style1">corstr="non_stat_M_dep", Mv=1</span>
+ would correspond to the following correlation matrix for a group of 
+size 4. Here &#945;, &#946;, and &#947; are parameters that need to be estimated.</li>
+</ul>
+<p align="center"><img src="Lecture%2014%20%28lab%29%E2%80%94Thursday,%20February%2018,%202010_files/nonstatMdep.gif" height="130" width="157"></p>
+<ul>
+  <li><span class="style1">"stat_M_dep"</span>: stands for stationary M-dependent and generates a banded structure. It also requires the <span class="style22">Mv</span> argument which denotes the number of nonzero bands to include. Like <span class="style1">"AR-M"</span>, it assumes there is a natural order to the data but differs from <span class="style1">"AR-M"</span>
+ in that the entries in different bands are unconnected to each other. 
+Within a band all the entries are assigned the same correlation 
+parameter (unlike <span class="style1">"non_stat_M_dep"</span>). Mathematically the correlation matrix that is produced  is called a Toeplitz matrix. For example, <span class="style1">corstr="stat_M_dep", Mv=2</span> for a cluster of size 4 would yield the following correlation matrix. Here &#945; and &#946; are parameters that need to be estimated.</li>
+</ul>
+<p align="center"><img src="Lecture%2014%20%28lab%29%E2%80%94Thursday,%20February%2018,%202010_files/statMdep.gif" alt="statmdep" height="133" width="158"></p>
+<p><a name="scalefix"></a>Because we are working with binary data we need to include one further argument: <span class="style1">scale.fix=T</span>.
+ This option causes the scale parameter to be fixed at its default value
+ of 1 rather than estimated. Omitting this argument and allowing <span class="style102">gee</span> to estimate the scale parameter generates a <a href="http://www.unc.edu/courses/2010spring/ecol/562/001/docs/lectures/lecture13.htm#quasifamily">quasibinomial</a>
+ model, which is an adjustment for overdispersion. Because binary data 
+cannot be overdispersed, a quasibinomial model is never appropriate for 
+binary data. For true binomial (non-binary) data and Poisson data we 
+would typically let this argument take its default value of <span class="style1">F</span> so that a scale parameter is estimated. Note: Specifying <span class="style1">corstr="independence"</span> and <span class="style1">scale.fix=F</span> is the same as fitting the identical model with <span class="style102">glm</span> and <span class="style1">family=quasibinomial</span>. </p>
+<p>To fit a GEE model with an exchangeable correlation structure to the nesting data we would enter the following.</p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">library(gee)</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">geefit.ex&lt;-gee(nesting2~factor(year)
+ + factor(period) + factor(deply) + rblval + factor(year)*factor(period)
+ + rblval*factor(period) + size + I(size^2), id=strtno, family=binomial,
+ corstr="exchangeable", scale.fix=T, data=sm)</div>
+<p>The <span class="style102">summary</span> function applied to this 
+object provides information about the model fit. I extract some of its 
+components individually in order to reduce the amount of output that is 
+displayed. First I examine the scale parameter and the estimated 
+correlation matrix.</p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px"> geefit.ex$scale</div>
+<span class="style24">  [1] 1</span>
+<div class="style10" style="padding-left: 30px; text-indent:-30px"> round(summary(geefit.ex)$working.correlation,2)</div>
+<span class="style24">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]<br>
+  &nbsp;[1,] 1.00 0.13 0.13 0.13 0.13 0.13 0.13 0.13 0.13&nbsp; 0.13&nbsp; 0.13&nbsp; 0.13<br>
+  &nbsp;[2,] 0.13 1.00 0.13 0.13 0.13 0.13 0.13 0.13 0.13&nbsp; 0.13&nbsp; 0.13&nbsp; 0.13<br>
+  &nbsp;[3,] 0.13 0.13 1.00 0.13 0.13 0.13 0.13 0.13 0.13&nbsp; 0.13&nbsp; 0.13&nbsp; 0.13<br>
+  &nbsp;[4,] 0.13 0.13 0.13 1.00 0.13 0.13 0.13 0.13 0.13&nbsp; 0.13&nbsp; 0.13&nbsp; 0.13<br>
+  &nbsp;[5,] 0.13 0.13 0.13 0.13 1.00 0.13 0.13 0.13 0.13&nbsp; 0.13&nbsp; 0.13&nbsp; 0.13<br>
+  &nbsp;[6,] 0.13 0.13 0.13 0.13 0.13 1.00 0.13 0.13 0.13&nbsp; 0.13&nbsp; 0.13&nbsp; 0.13<br>
+  &nbsp;[7,] 0.13 0.13 0.13 0.13 0.13 0.13 1.00 0.13 0.13&nbsp; 0.13&nbsp; 0.13&nbsp; 0.13<br>
+  &nbsp;[8,] 0.13 0.13 0.13 0.13 0.13 0.13 0.13 1.00 0.13&nbsp; 0.13&nbsp; 0.13&nbsp; 0.13<br>
+  &nbsp;[9,] 0.13 0.13 0.13 0.13 0.13 0.13 0.13 0.13 1.00&nbsp; 0.13&nbsp; 0.13&nbsp; 0.13<br>
+  [10,] 0.13 0.13 0.13 0.13 0.13 0.13 0.13 0.13 0.13&nbsp; 1.00&nbsp; 0.13&nbsp; 0.13<br>
+  [11,] 0.13 0.13 0.13 0.13 0.13 0.13 0.13 0.13 0.13&nbsp; 0.13&nbsp; 1.00&nbsp; 0.13<br>
+[12,] 0.13 0.13 0.13 0.13 0.13 0.13 0.13 0.13 0.13&nbsp; 0.13&nbsp; 0.13&nbsp; 1.00</span>
+<p>The scale parameter was not estimated but was fixed at 1, which is 
+correct for binary data. The correlation between observations within a 
+group is estimated to be 0.13. Because we specified an exchangeable 
+correlation structure, this correlation is the same for every pair of 
+observations within the group. What's displayed above is the full 
+correlation matrix of the largest group consisting of 12 elements.</p>
+<p>Next I examine the coefficient table of   parameter estimates.</p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px"> round(summary(geefit.ex)$coefficients,2)</div>
+<span class="style24">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ Estimate Naive S.E. Naive z Robust S.E. Robust z<br>
+  
+(Intercept)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ -3.63&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.57&nbsp;&nbsp; 
+-6.37&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.63&nbsp;&nbsp;&nbsp; 
+-5.77<br>
+  
+factor(year)1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 1.02&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.37&nbsp;&nbsp;&nbsp; 
+2.76&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0.36&nbsp;&nbsp;&nbsp;&nbsp; 2.79<br>
+  
+factor(year)1999&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 0.95&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.38&nbsp;&nbsp;&nbsp; 
+2.48&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0.31&nbsp;&nbsp;&nbsp;&nbsp; 3.08<br>
+  
+factor(period)2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 1.29&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.67 
+&nbsp;&nbsp;&nbsp;1.91&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0.71&nbsp;&nbsp;&nbsp;&nbsp; 1.82<br>
+  
+factor(period)3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 2.44&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.82&nbsp;&nbsp;&nbsp; 
+1.35&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1.77&nbsp;&nbsp;&nbsp;&nbsp; 1.38<br>
+  
+factor(period)4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 4.84&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.36&nbsp;&nbsp;&nbsp; 
+2.05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2.48&nbsp;&nbsp;&nbsp;&nbsp; 1.95<br>
+  
+factor(deply)2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ -0.02&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.27&nbsp;&nbsp; 
+-0.07&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.29&nbsp;&nbsp;&nbsp; 
+-0.06<br>
+  
+rblval&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 3.90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.44&nbsp;&nbsp;&nbsp; 
+2.71&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1.67&nbsp;&nbsp;&nbsp;&nbsp; 2.34<br>
+  
+size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 0.23&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.06&nbsp;&nbsp;&nbsp; 
+3.97&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0.06&nbsp;&nbsp;&nbsp;&nbsp; 4.10<br>
+  
+I(size^2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ -0.01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp; 
+-3.12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00 
+&nbsp;&nbsp;&nbsp;-3.22<br>
+  factor(year)1998:factor(period)2&nbsp;&nbsp;&nbsp; 
+-1.85&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.58&nbsp;&nbsp; 
+-3.20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.57&nbsp;&nbsp;&nbsp; 
+-3.26<br>
+  factor(year)1999:factor(period)2&nbsp;&nbsp;&nbsp; 
+-1.21&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.55&nbsp;&nbsp; 
+-2.21&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.45&nbsp;&nbsp;&nbsp; 
+-2.66<br>
+  factor(year)1998:factor(period)3&nbsp;&nbsp;&nbsp; 
+-1.48&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.87&nbsp;&nbsp; 
+-1.70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.83&nbsp;&nbsp;&nbsp; 
+-1.79<br>
+  factor(year)1999:factor(period)3&nbsp;&nbsp;&nbsp; 
+-1.12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.86&nbsp;&nbsp; 
+-1.31&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.80&nbsp;&nbsp;&nbsp; 
+-1.41<br>
+  factor(year)1998:factor(period)4&nbsp;&nbsp;&nbsp; 
+-1.62&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.67&nbsp;&nbsp; 
+-2.40&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.68&nbsp;&nbsp;&nbsp; 
+-2.36<br>
+  factor(year)1999:factor(period)4&nbsp;&nbsp;&nbsp; 
+-1.26&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.63&nbsp;&nbsp; 
+-1.99&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.63&nbsp;&nbsp;&nbsp; 
+-2.01<br>
+  
+factor(period)2:rblval&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ -2.41&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.10&nbsp;&nbsp; 
+-1.15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.23&nbsp;&nbsp;&nbsp; 
+-1.08<br>
+  
+factor(period)3:rblval&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ -5.11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.47&nbsp;&nbsp; 
+-2.07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.50&nbsp;&nbsp;&nbsp; 
+-2.04<br>
+factor(period)4:rblval&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ -6.02&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.88&nbsp;&nbsp; 
+-3.21&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.03&nbsp;&nbsp;&nbsp; 
+-2.97</span>
+  <p>The multiple standard error columns deserve comment. It was mentioned in <a href="http://www.unc.edu/courses/2010spring/ecol/562/001/docs/lectures/lecture13.htm#method3">lecture 13</a>
+ that GEE software routinely produces two standard error estimates: a 
+naive (or model-based) estimate and a robust (or sandwich) estimate. 
+These are what are displayed here. The naive estimate is the standard 
+error under the assumption that the correlation matrix has been 
+correctly specified and estimated. The robust estimate modifies the 
+naive estimate by a term that depends on the covariance of the model 
+residuals across groups. It is robust in the sense that using it allows 
+one to draw correct inferences from the data even if the correlation 
+model was incorrectly specified.  </p>
+  <p>Although no <em>p</em>-values are shown, the reported <em>z</em>-statistics
+ can be treated as standard normal random variables and tests carried 
+out in the usual fashion. Based on  the output it appears that we would 
+draw the same conclusions from significance tests that used either one 
+of the standard error estimates. </p>
+<h2><a name="choosing" id="choosing"></a>Choosing a correlation structure</h2>
+<p name="nlme">The subject of choosing a correlation structure in GEE models was discussed in <a href="http://www.unc.edu/courses/2010spring/ecol/562/001/docs/lectures/lecture13.htm#choosing">lecture 13</a>.
+ A good starting point is to pick a correlation structure that makes 
+sense given the nature of  the data. Because these are repeated measures
+ data, an exchangeable or an AR(1) structure are good choices. Choosing 
+correlation structures such as unstructured and nonstationary 
+M-dependent would be unmotivated here without additional information 
+about the data. It is always useful to fit an independence model to 
+serve as a reference. The next two runs  fit   an independence model and
+ an exchangeable correlation model.</p>
+<div class="style15" style="padding-left: 30px; text-indent:-30px">#independent</div>
+ <div class="style10" style="padding-left: 30px; text-indent:-30px"> 
+geefit.ind &lt;- gee(nesting2~factor(year)+ factor(period)+ 
+factor(deply)+ rblval+ factor(year)*factor(period)+ 
+rblval*factor(period)+ size+ I(size^2), id=strtno,family=binomial, 
+corstr="independence", data=sm, scale.fix=T)</div>
+<div class="style15" style="padding-left: 30px; text-indent:-30px">  #exchangeable</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">  
+geefit.ex &lt;- gee(nesting2~factor(year)+ factor(period)+ 
+factor(deply)+ rblval +factor(year)*factor(period)+ 
+rblval*factor(period)+ size+ I(size^2), id=strtno,family=binomial, 
+corstr="exchangeable", data=sm, scale.fix=T)</div>
+
+<p>Because there are missing data and gaps in the temporal series of measurements,  any  correlation model fit with the <span class="style102">gee</span> function that depends on the order of the data  will be incorrect. The <span class="style102">gee</span> function assumes that the non-missing observations in a group start at time = 0 and are then listed consecutively. With the <span class="style102">gee</span> function there is no way to indicate the presence of gaps in a time series. On the other hand the <span class="style102">geeglm</span> function in the <span class="style19">geepack</span> package doesn't have this shortcoming as will be explained <a href="#Rgeepack">below</a>. Fieberg et al. (2009) fit all their models using the <span class="style19">gee</span> package but overlooked this problem. Hence the results they report for an AR(1) model fit are wrong. </p>
+<p> Here's how one would ordinarily fit an unstructured, AR(1), 
+stationary M-dependent, and nonstationary M-dependent model with the <span class="style102">gee</span> function. Because the results are wrong for these data I won't bother to examine the output from these models.</p>
+<div class="style15" style="padding-left: 30px; text-indent:-30px">  #unstructured</div>
+ <div class="style10" style="padding-left: 30px; text-indent:-30px"> 
+geefit.un &lt;- gee(nesting2~factor(year)+ factor(period)+ 
+factor(deply)+ rblval+ factor(year)*factor(period)+ 
+rblval*factor(period)+ size+I(size^2), id=strtno, family=binomial, 
+corstr="unstructured", data=sm, scale.fix=T)</div>
+<div class="style15" style="padding-left: 30px; text-indent:-30px">#AR(1) model--incorrect for these data</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">  
+geefit.ar1 &lt;- gee(nesting2~factor(year)+ factor(period)+ 
+factor(deply)+ rblval+ factor(year)*factor(period)+ 
+rblval*factor(period)+ size+I(size^2), id=strtno, family=binomial, 
+corstr="AR-M", Mv=1,&nbsp; data=sm, scale.fix=T)</div>
+ <div class="style15" style="padding-left: 30px; text-indent:-30px"> #stationary dependence model lag 1--incorrect for these data</div>
+ <div class="style10" style="padding-left: 30px; text-indent:-30px"> 
+geefit.M1 &lt;- gee(nesting2~factor(year)+ factor(period)+ 
+factor(deply)+ rblval+factor(year)*factor(period)+ 
+rblval*factor(period)+ size+ I(size^2), id=strtno, family=binomial, 
+corstr="stat_M_dep", Mv=1, data=sm, scale.fix=T)</div>
+<div class="style15" style="padding-left: 30px; text-indent:-30px">  #nonstationary dependence model lag 1--incorrect for these data</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">  
+geefit.nM1 &lt;- gee(nesting2~factor(year)+ factor(period)+ 
+factor(deply)+ rblval+factor(year)*factor(period)+ 
+rblval*factor(period)+ size+ I(size^2), id=strtno, family=binomial, 
+corstr="non_stat_M_dep", Mv=1, data=sm, scale.fix=T)</div>
+
+<p>To compare models using QIC or CIC we need to write  code to calculate these statistics. A function that works with <span class="style102">gee</span> output is shown below.</p>
+<div class="style1" style="padding-left: 30px; text-indent:-30px">QIC.binom.gee &lt;- function(model.R,model.independence)</div>
+<div class="style1" style="padding-left: 30px; text-indent:-30px">  {</div>
+<div class="style17" style="padding-left: 60px; text-indent:-30px">  #calculates binomial QAIC of Pan (2001)</div>
+<div class="style17" style="padding-left: 60px; text-indent:-30px">  #obtain trace term of QAIC</div>
+ <div class="style1" style="padding-left: 60px; text-indent:-30px"> AIinverse &lt;- solve(model.independence$naive.variance)</div>
+ <div class="style1" style="padding-left: 60px; text-indent:-30px"> V.msR &lt;- model.R$robust.variance</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">trace.term &lt;- sum(diag(AIinverse%*%V.msR))</div>
+<div class="style17" style="padding-left: 60px; text-indent:-30px">#estimated mean and observed values</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">  mu.R &lt;- model.R$fitted.values</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">  y &lt;- model.R$y</div>
+<div class="style17" style="padding-left: 60px; text-indent:-30px">  #scale for binary data</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">  scale &lt;- 1</div>
+<div class="style17" style="padding-left: 60px; text-indent:-30px">  #quasilikelihood for binomial model</div>
+ <div class="style1" style="padding-left: 60px; text-indent:-30px"> quasi.R &lt;- sum(y*log(mu.R/(1-mu.R))+log(1-mu.R))/scale</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">QIC &lt;- (-2)*quasi.R + 2*trace.term</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">  output &lt;- c(QIC,trace.term)</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">  names(output) &lt;- c('QIC','CIC')</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">  output</div>
+<div class="style1" style="padding-left: 30px; text-indent:-30px">  }</div>
+<p name="nlme">This function can be sourced from the class web site.
+</p><div class="style10" style="padding-left: 30px; text-indent:-30px">source( 'http://www.unc.edu/courses/2010spring/ecol/562/001/data/lab7/QICbinomgee.txt')</div>
+<p name="nlme">To use the function we need to specify two arguments: the
+ model of interest (1st argument) as well as well as the independence 
+model (2nd argument). Below I use the function to calculate QIC and CIC 
+for the independence and exchangeable correlation models. </p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">sapply(list(geefit.ind, geefit.ex), function(x) QIC.binom.gee(x,geefit.ind))</div>
+<span class="style24">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [,1]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [,2]<br>
+  QIC 830.49827 828.77187<br>
+CIC&nbsp; 22.88311&nbsp; 21.03943</span>
+<p>Both QIC and CIC rate the exchangeable model as best.</p>
+<h2 name="nlme"><a name="Rgeepack" id="Rgeepack"></a>Generalized estimating equations using the geepack package</h2>
+<p name="nlme">The <span class="style19">geepack</span> package can also be used to fit GEE models in R. It's primary advantage over the <span class="style19">gee</span> package is that it has a <span class="style22">waves</span>
+ argument that can be used to identify the order of observations within 
+groups making it  possible to fit temporal correlation models to data 
+sets with missing values. The primary disadvantage of the <span class="style19">geepack</span>
+ package is that it provides fewer  correlation structures, (currently 
+only independence, exchangeable, unstructured, AR(1), and user-defined),
+ although it is possible to define some additional structures as 
+explained in Halekoh et al. (2006). The <span class="style19">geepack</span> package also provides a method for  the <span class="style102">anova</span> function that can be used to carry out multivariate Wald tests.</p>
+<p name="nlme"><a name="waves"></a> First we need to create a variable for the <span class="style22">waves</span>
+ argument—an integer-valued variable that reflects the order of the 
+observations in groups so that the proper observations in different 
+groups get matched up correctly. For the current data  we can combine 
+the variables <span class="style32">year</span> and <span class="style32">period</span> as a factor to create such a variable as follows.</p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px"> sm$wave &lt;- as.numeric(factor(paste(sm$year, sm$period, sep='.')))</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px"> sm[25:46,]</div>
+
+<span class="style24">  &nbsp;&nbsp; strtno year period rblval deply nesting2 size wave<br>
+  25&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp; 0.235&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.73&nbsp;&nbsp;&nbsp; 1<br>
+  26&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp; 0.235&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.73&nbsp;&nbsp;&nbsp; 2<br>
+  27&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3&nbsp; 0.797&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.73&nbsp;&nbsp;&nbsp; 3<br>
+  28&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+4&nbsp; 1.909&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.73&nbsp;&nbsp;&nbsp; 4<br>
+  29&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp; 0.383&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.73&nbsp;&nbsp;&nbsp; 5<br>
+  30&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp; 0.368&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.73&nbsp;&nbsp;&nbsp; 6<br>
+  31&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3&nbsp; 1.031&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.73&nbsp;&nbsp;&nbsp; 7<br>
+  32&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+4&nbsp; 2.035&nbsp;&nbsp;&nbsp;&nbsp; 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;0 0.73&nbsp;&nbsp;&nbsp; 8<br>
+  33&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 1999&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp; 0.281&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.73&nbsp;&nbsp;&nbsp; 9<br>
+  34&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 1999&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp; 0.357&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.73&nbsp;&nbsp; 10<br>
+  35&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 1999&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3&nbsp; 1.130&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.73&nbsp;&nbsp; 11<br>
+  36&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 1999&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+4&nbsp; 1.984&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.73&nbsp;&nbsp; 12<br>
+  37&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp; 0.172&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.31&nbsp;&nbsp;&nbsp; 1<br>
+  38&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp; 0.173&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.31&nbsp;&nbsp;&nbsp; 2<br>
+  39&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3&nbsp; 0.851&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.31&nbsp;&nbsp;&nbsp; 3<br>
+  40&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+4&nbsp; 1.960&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.31&nbsp;&nbsp;&nbsp; 4<br>
+  41&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp; 0.318&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.31&nbsp;&nbsp;&nbsp; 5<br>
+  42&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp; 0.302&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.31&nbsp;&nbsp;&nbsp; 6<br>
+  43&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3&nbsp; 1.018&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.31&nbsp;&nbsp;&nbsp; 7<br>
+  44&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+4&nbsp; 2.065&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.31&nbsp;&nbsp;&nbsp; 8<br>
+  45&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp; 0.179&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.00&nbsp;&nbsp;&nbsp; 1<br>
+46&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5 1997&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2&nbsp; 0.180&nbsp;&nbsp;&nbsp;&nbsp; 
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 0.00&nbsp;&nbsp;&nbsp; 2</span>
+<p name="nlme"><a name="geeglm"></a>We only need the <span class="style22">waves</span>
+ argument for the unstructured and AR(1) correlations, but it doesn't 
+hurt to include it in all the model calls. The function in the <span class="style19">geepack</span> package that fits GEE models is <span class="style102">geeglm</span>. The syntax is  the same as for the <span class="style102">gee</span> function except that AR(1) is specified as <span class="style1">corstr="ar1"</span>. Fitting an <span class="style1">"unstructured"</span>
+ correlation matrix can be very resource-intensive and for these data 
+causes R to crash. Below I fit  independence, exchangeable, and AR(1) 
+correlation models.</p>
+<div class="style15" style="padding-left: 30px; text-indent:-30px">#independence</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">geeglmfit.ind
+ &lt;- geeglm(nesting2~factor(year)+ factor(period)+ factor(deply)+ 
+rblval+ factor(year)*factor(period)+ rblval*factor(period)+ size+ 
+I(size^2), id=strtno, family=binomial(), corstr="independence", data=sm,
+ scale.fix=T, waves=wave)</div>
+<div class="style15" style="padding-left: 30px; text-indent:-30px">#exchangeable</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">geeglmfit.ex
+ &lt;- geeglm(nesting2~factor(year)+ factor(period)+ factor(deply)+ 
+rblval+ factor(year)*factor(period)+ rblval*factor(period)+ size+ 
+I(size^2), id=strtno, family=binomial(), corstr="exchangeable", data=sm,
+ scale.fix=T, waves=wave)</div>
+<div class="style15" style="padding-left: 30px; text-indent:-30px">#AR(1)</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">geeglmfit.ar1
+ &lt;- geeglm(nesting2~factor(year)+ factor(period)+ factor(deply)+ 
+rblval+ factor(year)*factor(period)+ rblval*factor(period)+ size+ 
+I(size^2), id=strtno, family=binomial(), corstr="ar1", data=sm, 
+scale.fix=T, waves=wave)</div>
+<p name="nlme">To compare these models we need to modify our QIC function so that it works with <span class="style102">geeglm</span> output. The result  is shown below.</p>
+<div class="style1" style="padding-left: 30px; text-indent:-30px">QIC.binom.geeglm &lt;- function(model.geeglm, model.independence)</div>
+<div class="style1" style="padding-left: 30px; text-indent:-30px">  {</div>
+ <div class="style17" style="padding-left: 60px; text-indent:-30px"> #calculates binomial QAIC of Pan (2001)</div>
+<div class="style17" style="padding-left: 60px; text-indent:-30px">  #obtain trace term of QAIC</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">  AIinverse &lt;- solve(model.independence$geese$vbeta.naiv)</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">  V.msR &lt;- model.geeglm$geese$vbeta</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">  trace.term &lt;- sum(diag(AIinverse%*%V.msR))</div>
+<div class="style17" style="padding-left: 60px; text-indent:-30px">#estimated mean and observed values</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">  mu.R &lt;- model.geeglm$fitted.values</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">  y &lt;- model.geeglm$y</div>
+<div class="style17" style="padding-left: 60px; text-indent:-30px">  #scale for binary data</div>
+ <div class="style1" style="padding-left: 60px; text-indent:-30px"> scale &lt;- 1</div>
+<div class="style17" style="padding-left: 60px; text-indent:-30px">  #quasilikelihood for binomial model</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">  quasi.R &lt;- sum(y*log(mu.R/(1-mu.R))+log(1-mu.R))/scale</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">QIC &lt;- (-2)*quasi.R + 2*trace.term</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">  output &lt;- c(QIC,trace.term)</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">  names(output) &lt;- c('QIC','CIC')</div>
+<div class="style1" style="padding-left: 60px; text-indent:-30px">  output</div>
+  <div class="style1" style="padding-left: 30px; text-indent:-30px">}</div>
+<p name="nlme">I apply the function to the three models we have fit.</p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">source( 'http://www.unc.edu/courses/2010spring/ecol/562/001/data/lab7/QICbinomgeeglm.txt')</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">sapply(list(geeglmfit.ind, geeglmfit.ex, geeglmfit.ar1), function(x) QIC.binom.geeglm(x,geeglmfit.ind))</div>
+<span class="style24">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [,1]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [,2]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [,3]<br>
+  QIC 830.99921 829.11723 830.99933<br>
+CIC&nbsp; 23.13358&nbsp; 21.24456&nbsp; 23.13364</span>
+<p name="nlme">The exchangeable model ranks best using either CIC or QIC. I examine the summary table of this model. </p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px"> summary(geeglmfit.ex)</div>
+<span class="style24">Call:<br>
+  geeglm(formula = nesting2 ~ factor(year) + factor(period) + factor(deply) + <br>
+  &nbsp;&nbsp;&nbsp; rblval + factor(year) * factor(period) + rblval * factor(period) + <br>
+  &nbsp;&nbsp;&nbsp; size + I(size^2), family = binomial(), data = sm, id = strtno, <br>
+  &nbsp;&nbsp;&nbsp; waves = wave, corstr = "exchangeable", scale.fix = T)</span>
+<p><span class="style24">&nbsp;Coefficients:<br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ Estimate&nbsp; Std.err&nbsp; Wald Pr(&gt;|W|)&nbsp;&nbsp;&nbsp; <br>
+  
+(Intercept)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ -3.63025&nbsp; 0.63152 33.05&nbsp;&nbsp;&nbsp; 9e-09 ***<br>
+  
+factor(year)1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 1.01778&nbsp; 0.36533&nbsp; 7.76&nbsp;&nbsp; 0.0053 ** <br>
+  
+factor(year)1999&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ &nbsp;&nbsp;&nbsp;0.95134&nbsp; 0.30565&nbsp; 9.69&nbsp;&nbsp; 0.0019 
+** <br>
+  
+factor(period)2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 1.28438&nbsp; 0.70682&nbsp; 3.30&nbsp;&nbsp; 0.0692 .&nbsp; <br>
+  
+factor(period)3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 2.43981&nbsp; 1.79132&nbsp; 1.86&nbsp;&nbsp; 0.1732&nbsp;&nbsp;&nbsp; <br>
+  
+factor(period)4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 4.84071&nbsp; 2.52702&nbsp; 3.67&nbsp;&nbsp; 0.0554 .&nbsp; <br>
+  
+factor(deply)2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ -0.01573&nbsp; 0.29467&nbsp; 0.00&nbsp;&nbsp; 0.9574&nbsp;&nbsp;&nbsp; <br>
+  
+rblval&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 3.90822&nbsp; 1.66698&nbsp; 5.50&nbsp;&nbsp; 0.0191 *&nbsp; <br>
+  
+size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 0.22636&nbsp; 0.05514 16.85&nbsp;&nbsp;&nbsp; 4e-05 ***<br>
+  
+I(size^2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ -0.00715&nbsp; 0.00222 10.34&nbsp;&nbsp; 0.0013 ** <br>
+  factor(year)1998:factor(period)2 -1.84861&nbsp; 0.57064 10.49&nbsp;&nbsp; 0.0012 ** <br>
+  factor(year)1999:factor(period)2 -1.20950&nbsp; 0.45579&nbsp; 7.04&nbsp;&nbsp; 0.0080 ** <br>
+  factor(year)1998:factor(period)3 -1.47907&nbsp; 0.82720&nbsp; 3.20&nbsp;&nbsp; 0.0738 .&nbsp; <br>
+  factor(year)1999:factor(period)3 -1.12472&nbsp; 0.79685&nbsp; 1.99&nbsp;&nbsp; 0.1581&nbsp;&nbsp;&nbsp; <br>
+  factor(year)1998:factor(period)4 -1.61419&nbsp; 0.69213&nbsp; 5.44&nbsp;&nbsp; 0.0197 *&nbsp; <br>
+  factor(year)1999:factor(period)4 -1.25735&nbsp; 0.63192&nbsp; 3.96&nbsp;&nbsp; 0.0466 *&nbsp; <br>
+  
+factor(period)2:rblval&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ -2.40517&nbsp; 2.22897&nbsp; 1.16&nbsp;&nbsp; 0.2806&nbsp;&nbsp;&nbsp; <br>
+  
+factor(period)3:rblval&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ -5.11459&nbsp; 2.50854&nbsp; 4.16&nbsp;&nbsp; 0.0415 *&nbsp; <br>
+  
+factor(period)4:rblval&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ -6.02830&nbsp; 2.04198&nbsp; 8.72&nbsp;&nbsp; 0.0032 ** <br>
+  ---<br>
+  Signif. codes:&nbsp; 0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 </span>
+</p><p><span class="style24">Scale is fixed.</span>
+</p><p><span class="style24">Correlation: Structure = exchangeable&nbsp; Link = identity </span>
+</p><p><span class="style24">Estimated Correlation Parameters:<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Estimate Std.err<br>
+  alpha&nbsp;&nbsp;&nbsp; 0.124&nbsp; 0.0223<br>
+  Number of clusters:&nbsp;&nbsp; 109&nbsp;&nbsp; Maximum cluster size: 12</span>
+</p><p name="nlme">The display differs somewhat from  what is produced by <span class="style102">gee</span>. Only one column of standard errors is shown. These correspond to the robust estimates of <span class="style102">gee</span>.
+ The naive estimates are not shown. The robust or Huber sandwich 
+estimator provides reasonable variance estimates even when the specified
+ correlation model is incorrect. If the correlation model is nearly 
+correct, so will be the naive standard errors, and robustification is 
+unlikely to help much. So, unless you have strong reason to believe that
+ the chosen correlation matrix is correct, it is recommended to always 
+report the robust standard errors.  </p>
+<p name="nlme">The column labeled <span class="style24">Wald</span> in the summary table is the square of the <em>z</em>-statistic reported by the <span class="style102">gee</span> function. Both the <em>z</em>-statistic
+ and its square are variously referred to as Wald statistics. The square
+ of a standard normal random variable is a chi-squared random variable 
+with 1 degree of freedom, <img src="Lecture%2014%20%28lab%29%E2%80%94Thursday,%20February%2018,%202010_files/chsq1.gif" alt="chisq1" align="absmiddle" height="32" width="52">.  So, the reported  <em>p</em>-values are the upper tailed probabilities from a <img src="Lecture%2014%20%28lab%29%E2%80%94Thursday,%20February%2018,%202010_files/chsq1.gif" alt="chisq1" align="absmiddle" height="32" width="52"> distribution and test whether the true parameter value is different from zero.</p>
+<p name="nlme">The naive variance-covariance matrix of the parameter estimates can be found as the <span class="style22">vbeta.naiv</span> component of  the <span class="style36">geese</span> component of the model.</p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px"> sqrt(diag(geeglmfit.ex$geese$vbeta.naiv))</div>
+<span class="style24">  &nbsp;[1] 0.56885 0.37051 0.38535 0.67443 1.82557 2.41482 0.26492 1.43756 0.05659 0.00227<br>
+[11] 0.57878 0.54734 0.86741 0.86022 0.67778 0.63500 2.10162 2.47248 1.88963</span>
+<p>Using these standard errors Wald statistics can then be constructed 
+by hand. The squared versions of the Wald statistics using the naive 
+standard errors are shown below. </p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">(coef(geeglmfit.ex)/sqrt(diag(geeglmfit.ex$geese$vbeta.naiv)))^2</div>
+<span class="style24">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+(Intercept)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ factor(year)1998 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;40.72722&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 7.54582 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+factor(year)1999&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ factor(period)2 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+6.09467&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 3.62678 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+factor(period)3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ factor(period)4 <br>
+  &nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.78614&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 4.01836 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+factor(deply)2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ rblval <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+0.00353&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 7.39107 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ I(size^2) <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+16.00150&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 9.90717 <br>
+  factor(year)1998:factor(period)2 factor(year)1999:factor(period)2 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+10.20156&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 4.88309 <br>
+  factor(year)1998:factor(period)3 factor(year)1999:factor(period)3 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+2.90761&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 1.70948 <br>
+  factor(year)1998:factor(period)4 factor(year)1999:factor(period)4 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+5.67187&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 3.92075 <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+factor(period)2:rblval 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;factor(period)3:rblval
+ <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+1.30973&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 4.27916 <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; factor(period)4:rblval <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 10.17733</span>
+<p>These can then be compared to the upper tail of a <img src="Lecture%2014%20%28lab%29%E2%80%94Thursday,%20February%2018,%202010_files/chsq1.gif" alt="chisq1" align="absmiddle" height="32" width="52"> distribution to obtain <em>p</em>-values.</p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">round(pchisq((coef(geeglmfit.ex)/ sqrt(diag(geeglmfit.ex$geese$vbeta.naiv)))^2, 1, lower.tail=F), 4)</div>
+<span class="style24">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Intercept)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ factor(year)1998 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+0.0000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 0.0060 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+factor(year)1999&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ factor(period)2 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+0.0136&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 0.0569 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+factor(period)3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ factor(period)4 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+0.1814&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 0.0450 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+factor(deply)2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ rblval <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+0.9527&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ &nbsp;&nbsp;&nbsp;&nbsp;0.0066 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ I(size^2) <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+0.0001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 0.0016 <br>
+  factor(year)1998:factor(period)2 factor(year)1999:factor(period)2 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 0.0014&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0271
+ <br>
+  factor(year)1998:factor(period)3 factor(year)1999:factor(period)3 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+0.0882&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 0.1911 <br>
+  factor(year)1998:factor(period)4 factor(year)1999:factor(period)4 <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+0.0172&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 0.0477 <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+factor(period)2:rblval&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ factor(period)3:rblval <br>
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+0.2524&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 0.0386 <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; factor(period)4:rblval <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0014 </span>
+<p>These are quite similar to the <em>p</em>-values reported using the robust standard errors.</p>
+<p>As was discussed in <a href="http://www.unc.edu/courses/2010spring/ecol/562/001/docs/lectures/lecture13.htm#method3">lecture 13</a>
+ we  can also use the naive and robust variance estimates to select a 
+correlation model. The model whose robust variance estimates most 
+closely resembles its naive variance estimates is the better correlation
+ model. To obtain a single summary statistic for this comparison I use 
+the entire parameter covariance matrix and sum the absolute differences 
+between the naive and robust covariance matrices.</p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">var.crit &lt;- function(mymodel) sum(abs(mymodel[["geese"]]$vbeta.naiv-mymodel[["geese"]]$vbeta))</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px"> sapply(list(geeglmfit.ind, geeglmfit.ex, geeglmfit.ar1), var.crit)</div>
+<span class="style24">[1] 49.1 36.4 49.1</span>
+<p>The sum of the absolute differences between the naive and robust 
+covariance estimates is smallest for the exchangeable correlation 
+structure. This is consistent with the conclusions we drew using QIC and
+ CIC.</p>
+<p>To test whether a categorical predictor with more than two levels 
+should be retained in a GEE model we need to test the entire set of 
+dummy variables simultaneously as a single construct. The <span class="style19">geepack</span> package provides a method for the <span class="style102">anova</span>
+ function that carries out a multivariate Wald test. (Remember, there is
+ no likelihood associated with GEE models and hence no likelihood ratio 
+tests.) When the <span class="style102">anova</span> function is applied to a single <span class="style102">geeglm</span>
+ object it returns sequential Wald tests for individual predictors with 
+the tests carried out in the order the predictors were listed in the 
+model formula.</p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px"> anova(geeglmfit.ex)</div>
+<span class="style24">Analysis of 'Wald statistic' Table<br>
+Model: binomial, link: logit<br>
+Response: nesting2<br>
+Terms added sequentially (first to last)</span>
+<p><span class="style24">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ Df&nbsp;&nbsp;&nbsp; X2 P(&gt;|Chi|)&nbsp;&nbsp;&nbsp; <br>
+  
+factor(year)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 2&nbsp; 0.24&nbsp;&nbsp;&nbsp; 0.8872&nbsp;&nbsp;&nbsp; <br>
+  
+factor(period)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 3 23.14&nbsp;&nbsp; 3.8e-05 ***<br>
+  
+factor(deply)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 1&nbsp; 0.02&nbsp;&nbsp;&nbsp; 0.8927&nbsp;&nbsp;&nbsp; <br>
+  
+rblval&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 1&nbsp; 1.01&nbsp;&nbsp;&nbsp; 0.3147&nbsp;&nbsp;&nbsp; <br>
+  
+size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 1&nbsp; 7.57&nbsp;&nbsp;&nbsp; 0.0059 ** <br>
+  
+I(size^2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 1&nbsp; 9.43&nbsp;&nbsp;&nbsp; 0.0021 ** <br>
+  factor(year):factor(period)&nbsp; 6 20.00&nbsp;&nbsp;&nbsp; 0.0028 ** <br>
+  factor(period):rblval&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3&nbsp; 9.01&nbsp;&nbsp;&nbsp; 0.0291 *&nbsp; <br>
+  ---<br>
+  Signif. codes:&nbsp; 0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</span>
+</p><h2 name="nlme"><a name="binary"></a>A binary mixed effects model</h2>
+<p name="nlme">An alternative way to account for  repeated measures is 
+to fit a mixed effects model with random intercepts. This yields what's 
+called a conditional model instead of the marginal model that we obtain 
+with GEE. The  parameters of  a conditional model  have a 
+subject-specific interpretation rather than the population-averaged 
+interpretation of a marginal model. Because logistic regression uses a 
+nonlinear link function, the magnitudes of  the estimated effects in 
+marginal models will differ from those same effects  estimated in 
+conditional models. (See <a href="http://www.unc.edu/courses/2010spring/ecol/562/001/docs/lectures/lecture13.htm#logit">lecture 13</a>.)
+ In logistic regression the parameter estimates from a conditional  
+model tend to be larger in magnitude (more positive or more negative) 
+than the corresponding parameter estimates from a marginal model.</p>
+<p name="nlme"> The <span class="style19">lme4</span> package  fits 
+generalized linear mixed effects models (GLMM) and can be used to fit a 
+random intercepts model to binary data. A brief explanation of the 
+syntax used in this package was given in <a href="http://www.unc.edu/courses/2010spring/ecol/562/001/docs/lectures/lecture12.htm#fitting">lecture 12</a>.</p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">lmerfit
+ &lt;- lmer(nesting2~factor(year)+ factor(period)+ factor(deply)+ 
+rblval+ factor(year)*factor(period)+ rblval*factor(period)+ size+ 
+I(size^2)+ (1|strtno), family=binomial, data=sm, REML=F)</div>
+<p>For comparison I also fit an ordinary logistic regression model in which the repeated measures structure is ignored.</p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">glmfit
+ &lt;- glm(nesting2~factor(year)+ factor(period)+ factor(deply)+ rblval+
+ factor(year)*factor(period)+ rblval*factor(period)+ size+ I(size^2), 
+family=binomial, data=sm)</div>
+<p>If we compare the AIC of the ordinary logistic regression model with 
+that of the mixed effects logistic regression model we see that the AIC 
+of the mixed effects model is lower indicating that it should be 
+preferred. Thus we have evidence for observational heterogeneity, a 
+conclusion that is consistent with the GEE model selection results that 
+favored an exchangeable correlation structure over independence.</p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">AIC(glmfit,lmerfit)</div>
+<span class="style24">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; df AIC<br>
+  glmfit&nbsp; 19 823<br>
+  lmerfit 20 778</span>
+<h2 name="nlme"><a name="comparing"></a>Comparing marginal and subject-specific models</h2>
+<p name="nlme">Next I compare the parameter estimates from GLM, GEE, and GLMM.</p>
+<div class="style10" style="padding-left: 30px; text-indent:-30px"> out.comp &lt;- round(cbind(coef(glmfit), coef(geeglmfit.ex), fixef(lmerfit)),3)</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px"> rownames(out.comp) &lt;- names(coef(glmfit))</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px"> colnames(out.comp) &lt;- c('GLM','GEE','GLMM')</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px"> out.comp</div>
+<span class="style24">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GLM&nbsp;&nbsp;&nbsp;
+ GEE&nbsp;&nbsp; GLMM<br>
+  
+(Intercept)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ -3.777 -3.630 -4.834<br>
+  
+factor(year)1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 1.027&nbsp; 1.018&nbsp; 1.232<br>
+  
+factor(year)1999&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 0.955&nbsp; 0.951&nbsp; 1.174<br>
+  
+factor(period)2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 1.196&nbsp; 1.284&nbsp; 1.598<br>
+  
+factor(period)3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 2.200&nbsp; 2.440&nbsp; 3.227<br>
+  
+factor(period)4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 4.869&nbsp; 4.841&nbsp; 6.133<br>
+  
+factor(deply)2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 0.123 -0.016&nbsp; 0.108<br>
+  
+rblval&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 4.214&nbsp; 3.908&nbsp; 5.036<br>
+  
+size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 0.224&nbsp; 0.226&nbsp; 0.311<br>
+  
+I(size^2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ -0.007 -0.007 -0.010<br>
+  factor(year)1998:factor(period)2 -1.994 -1.849 -2.245<br>
+  factor(year)1999:factor(period)2 -1.318 -1.210 -1.457<br>
+  factor(year)1998:factor(period)3 -1.588 -1.479 -1.749<br>
+  factor(year)1999:factor(period)3 -1.237 -1.125 -1.305<br>
+  factor(year)1998:factor(period)4 -1.577 -1.614 -1.896<br>
+  factor(year)1999:factor(period)4 -1.270 -1.257 -1.507<br>
+  factor(period)2:rblval&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -2.288 -2.405 -2.987<br>
+  factor(period)3:rblval&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-5.280 -5.115 -6.676<br>
+factor(period)4:rblval&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -6.331 -6.028 -7.703</span>
+<p name="nlme">From the output we see that the subject-specific 
+(conditional) mixed effects model coefficients  are  larger in magnitude
+ than the same coefficients from the population-averaged (marginal) GEE 
+model.  As was explained in <a href="http://www.unc.edu/courses/2010spring/ecol/562/001/docs/lectures/lecture13.htm#subject">lecture 13</a>,
+ the difference arises because averaging on a logit scale (conditional 
+model) is not equivalent to averaging on the scale of the raw response 
+(marginal model). </p>
+<p name="nlme">For these data the variables <span class="style32">year</span>, <span class="style32">period</span>, and <span class="style32">rblval</span> have clear subject-specific interpretations because they vary across observation times. On the other hand the variables <span class="style32">size</span> and <span class="style32">deply</span> do not have clear subject-specific interpretations because they are constant at each nest site. With <span class="style32">size</span> this doesn't matter too much because <span class="style32">size</span> is  a control variable that is probably uninteresting on its own. On the other hand the variable <span class="style32">deply</span> (nest box type) is of some interest. For a subject-specific interpretation to make sense for <span class="style32">deply</span>
+ we would need to be able to compare two individuals who are identical 
+(have the same random effect) but occur in different nest box types. </p>
+<p name="nlme">Fig. 1 compares the subject-specific and population-averaged interpretations for the predictor <span class="style32">rblval</span> during period 1 of 1999 for a single cylinder nest (<span class="style32">deply</span> = 0) in a wetland of <span class="style32">size</span>
+ = 0. The individual subject-specific curves  that are displayed cover 
+the complete range of random intercepts that were predicted. The pure 
+fixed effects model corresponds to the center of this random effects 
+distribution, u<sub>i</sub> = 0, and so represents the typical 
+individual, i.e., the average individual on a logit scale. As the plot 
+shows this is quite different from the marginal model, which represents 
+the average individual on a probability scale.</p>
+<div class="style15" style="padding-left: 30px; text-indent:-30px">#population-averaged probability</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">logit.ex &lt;- function(x) {</div>
+<div class="style10" style="padding-left: 60px; text-indent:-30px">  lin.model &lt;- coef(geeglmfit.ex)[1]+ coef(geeglmfit.ex)[3]+ coef(geeglmfit.ex)[8]*x</div>
+<div class="style10" style="padding-left: 60px; text-indent:-30px">exp(lin.model)/(1+exp(lin.model)) </div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">}</div>
+<div class="style15" style="padding-left: 30px; text-indent:-30px">#subject-specific probability</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">logit.ss &lt;- function(x,u=0) {</div>
+<div class="style10" style="padding-left: 60px; text-indent:-30px">   lin.model &lt;- fixef(lmerfit)[1]+ fixef(lmerfit)[3]+ fixef(lmerfit)[8]*x+ u</div>
+<div class="style10" style="padding-left: 60px; text-indent:-30px">exp(lin.model)/(1+exp(lin.model)) </div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">}</div>
+<div class="style15" style="padding-left: 30px; text-indent:-30px">#draw curves</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">curve(logit.ex, from=.05, to=1.8, xlab='Rblval', ylab='Probability of use', ylim=c(0,1))</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">sapply(unique(ranef(lmerfit))[[1]][,1], function(y) curve(logit.ss(x,y), add=T, col='grey70', lty=2)) -&gt; yuk</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">curve(logit.ss(x,0), add=T, col=1, lwd=2)</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">curve(logit.ex, add=T, lwd=2, col=2)</div>
+<div class="style10" style="padding-left: 30px; text-indent:-30px">legend('bottomright',
+ c('Population-averaged', expression(paste('Subject-specific, ', 
+u[i]==0)), 'Subject-specific'), col=c(2,1,'grey40'), lwd=c(2,2,1), 
+lty=c(1,1,2), cex=.8, bty='n')</div>
+<p name="nlme" align="center"><img src="Lecture%2014%20%28lab%29%E2%80%94Thursday,%20February%2018,%202010_files/fig1.png" alt="fig. 1" height="310" width="460"></p>
+<p name="nlme" align="center"><span class="styleArial"><strong>Fig. 1 &nbsp;</strong>Comparing subject-specific and population-averaged models</span></p>
+<h2><a name="cited"></a>Cited References</h2>
+<ul>
+  <li>Fieberg, John, Randall H. Rieger, Michael C. Zicus, and Jonathan 
+S. Schildcrout. 2009. Regression modelling of correlated data in 
+ecology: subject-specific and population averaged response patterns. <em>Journal of Applied Ecology</em> <strong>46</strong>(5): 1018–1025.</li>
+  <li>Halekoh, Ulrich, Søren Højsgaard, and Jun Yan. 2006. The R package geepack for generalized estimating equations. <em>Journal of Statistical Software</em> <strong>15</strong>(2).</li>
+</ul>
+
+<p align="center"><a href="http://www.unc.edu/courses/2010spring/ecol/562/001/index.html">Course Home Page</a> </p>
+<hr align="center" width="75%">
+<!--Standard footer follows -->
+<p></p>
+<table align="CENTER" border="3" cellpadding="2" cellspacing="2" width="586">
+  <tbody><tr bgcolor="#CCCCCC">
+    <td width="100%"><font size="-1">Jack Weiss<br>
+          <i>Phone: </i>(919) 962-5930<br>
+          <i>E-Mail:</i> jack_weiss@unc.edu<br>
+          <i>Address: </i>Curriculum in Ecology, Box 3275, University of North Carolina, Chapel Hill, 27599<br>
+      Copyright © 2010<br>
+      Last Revised--September 18, 2011<br>
+      URL: <a href="#lecture14" target="_self">http://www.unc.edu/courses/2010spring/ecol/562/001/docs/lectures/lecture14.htm</a></font></td>
+  </tr>
+</tbody></table>
+<p align="center">&nbsp;</p>
+
+
+</body></html>

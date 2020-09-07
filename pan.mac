@@ -1,0 +1,164 @@
+%macro pan(dataset=,id=,y=,x=,t=,type=);
+
+/* This macro calculates the two statistic of Pan*/
+
+data one;
+  set &dataset;
+run;
+
+data one;
+  set one;
+  by &id;                      /* puts dataset into 'one' */
+  if first.&id then idm+1;
+run;
+
+proc sort data=one;
+  by id;
+run;
+
+data y(keep=&y);
+  set one;
+run;
+
+data x(keep=&x);
+  set one;
+run;
+
+data id ( keep = idm );
+set one;
+run;
+
+/**corrw contains the estimated working correlation matrix**/
+
+ods select pans;
+ods output GEEWCorr=corrw;
+
+/**obstats contains those observation statistics including predicted
+****values**/
+
+ods output ObStats=obstats;
+proc genmod data=one descending;
+     class &id;
+     model &y=&x / dist=binomial pred r ;
+     repeated subject=&id/corrw type=&type;
+run;
+
+data pi(keep=pred);
+   set obstats;
+run;
+
+%* ---- count the covariates;  
+
+%let p=0;
+%do %while(%scan(&x,&p+1)^=); %let p=%eval(&p+1); %end;
+
+proc iml worksize=5000;
+%* get design matrix X,outcome vector Y,n is;
+%* the total number of observations;
+
+   t=&t;
+   USE ID;
+   READ ALL INTO ID;  
+   s = max(id);             /* total number of persons */  
+   n = s*t;
+  use y; read all into Y;
+  use x; read all into X;
+  inter=J(n,1,1);
+  X=inter || X;
+  p=ncol(X);
+/** Create matrix  Pi:expected mean of Y, and A:variance matrix,and
+****working correlation matrix Rw ,and working covariance matrix V **/
+  
+  use corrw; read all into Rw;
+  use pi; read all into Pi;
+  Ru=j(t,t,0);
+  Do i=1 to s;
+   free A_i Y_i X_i p_i;
+   times = loc(id=i);
+   Y_i = Y[times,];
+   X_i = X[times,];
+   p_i = Pi[times,];
+   A_i = Diag( diag(p_i) - p_i*p_i` );
+   Ru = Ru + sqrt(inv(A_i))*(Y_i - p_i)*(Y_i - p_i)`*sqrt(inv(A_i));
+  end;
+   Ru = Ru/s;
+  varG1=0;
+  varG2=0;
+  varU1=0; 
+  varU2=0;
+  G=0;U=0;
+  B=j(p,p,0); /***B is inv(X'A*inv(V)*AX)**/
+  Do i = 1 to s ;
+    free x_i A_i V_i p_i;
+    times=loc(id=i);
+    x_i = X[times,];
+    p_i = Pi[times,];
+    A_i = Diag( diag(p_i) - p_i*p_i` );
+    V_i = sqrt(A_i)*Rw*sqrt(A_i);
+    B = B + x_i`*A_i*inv(V_i)*A_i*x_i;
+  end;
+    B = inv(B);
+    EU=0;
+
+  Do i = 1 to s;
+      free  c_i z_i a1_i  p_i y_i x_i A_i h1_i h2_i ti V_i;
+      ti = loc(id=i);
+      z_i = j(t,1,1)-2*Pi[ti,];  
+   y_i = Y[ti,]; 
+   x_i = X[ti,]; 
+   p_i = Pi[ti,]; 
+   A_i = Diag( diag(p_i) - p_i*p_i` ); 
+   V_i = sqrt(A_i)*Rw*sqrt(A_i);
+   a1_i = inv(A_i);
+   h1_i = j(1,t,0); 
+   h2_i = j(1,t,0);
+   c_i = (y_i - p_i)*(y_i -p_i)`;
+    Do j = 1 to s;
+         free  c_j z_j a1_j  p_j  y_j  x_j A_j  V_j  tj i_ij;
+   tj = loc(id=j);
+   z_j = j(t,1,1)-2*Pi[tj,];
+   y_j = Y[tj,];
+   x_j = X[tj,];
+   p_j = Pi[tj,];
+   A_j = Diag( diag(p_j) - p_j*p_j` );
+   a1_j = inv(A_j);
+   V_j = sqrt(A_j)*Rw*sqrt(A_j);
+   h_ji = A_j*x_j*B*x_i`*A_i*inv(V_i);***ji part of H**;
+
+   if j=i then i_ij = i(t);
+   else i_ij=j(t,t,0); 
+   h1_i = h1_i + z_j`*a1_j*(i_ij - h_ji);
+   h2_i = h2_i + z_j`*(i_ij - h_ji);
+   end;
+    varG1 = varG1 + h1_i*c_i*h1_i`;/****Empirical estimator**/
+    varG2 = varG2 + h1_i*sqrt(A_i)*Ru*sqrt(A_i)*h1_i`;/***Unstructured***/
+    varU1 = varU1 + h2_i*c_i*h2_i`;
+    varU2 = varU2 + h2_i*sqrt(A_i)*Ru*sqrt(A_i)*h2_i`;
+    
+    EU = EU + p_i`*(j(t,1,1) - p_i);
+    G = G + j(1,t,1)*((y_i - p_i)##2/(p_i#(j(t,1,1)-p_i)));
+    U = U + j(1,t,1)*((y_i - p_i)##2);
+   end;
+    EG = n;
+    U1=(U-EU)/sqrt(varU1);
+    U2=(U-EU)/sqrt(varU2);
+    G1=(G-EG)/sqrt(varG1);
+    G2=(G-EG)/sqrt(varG2);
+    x1=G1 || G2 || U1 || U2;
+
+  edit pans;
+  setout pans;
+  append from x1;
+  close pans;
+  free /;
+ quit;
+%mend pan;
+
+
+
+
+
+
+
+
+

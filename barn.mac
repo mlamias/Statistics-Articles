@@ -1,0 +1,289 @@
+%macro barn(dataset=,id=,t=,y=,x=,
+              inde=,maxit=,criteria=,type=);
+
+%* id = 1 to n;
+%* time = 1 or 2;
+
+data one;
+   set &dataset;
+   one=1;
+run;
+
+data one;
+  set one;
+  by &id;                      /* puts dataset into 'one' */
+  if first.&id then idm+1;
+run;
+
+proc sort data=one;
+  by &id;
+run;
+
+data y ( keep = &y );
+set one;
+run;
+
+
+data x ( keep = &x );
+  length &x 8;
+set one;
+run;
+
+
+data id ( keep = idm );
+set one;
+run;
+
+data inde(keep=&inde);
+  set one;
+run;
+
+
+
+/**corrw contains the estimated working correlation matrix**/
+
+ods select bhs;
+ods output GEEWCorr=corrw;
+
+/**obstats contains those observation statistics including predicted
+****values**/
+ods output ObStats=obstats;
+proc genmod data=one descending;
+     class &id;
+     model &y=&x / dist=binomial pred r ;
+     repeated subject=&id/corrw type=&type;
+run;
+ 
+data pi(keep=pred); 
+   set obstats;
+run;
+
+
+proc iml worksize=5000;
+reset nolog noprint;
+
+   t=&t;
+
+   USE ID;
+   READ ALL INTO ID;
+   n = max(id);             /* total number of persons */
+
+   USE Y;
+   READ ALL INTO Y;
+
+   USE X;
+   READ ALL INTO X; 
+   nx = ncol(x);        /* nxps = # of p-s covariates,excluding intercepts */
+   
+   nbeta=nx+1;
+   beta = j( nbeta, 1, 0);   /* gives initial estimate for beta */
+
+   USE INDE;
+   READ ALL INTO INDE;
+   m=max(inde);    /* m = # of subsapce of covariate space*/
+   ntheta=(t-1)+m+(t-1)*m;
+
+   use corrw; read all into Rw;
+   use pi; read all into pi;
+
+/*
+xpsav = j( nxps, 1, 0);
+do j=1 to nxps;
+  do i=1 to n;
+    xpsav[j,1] = xpsav[j,1] + (xps[i,j]/n);
+  end;
+end;
+do j=1 to nxps;
+  do i=1 to n;
+    xps[i,j] = xps[i,j] - xpsav[j,1];
+  end;
+end;
+
+
+nbes = 0;
+%if &es = 1 %then %do;
+   USE X1;
+   READ ALL INTO X1;
+nbes = nrow(x1`);      * nbes = the # of eye-specific pars;
+xleav = j( nbes, 1, 0); * Centers left eye-specific covariates;
+
+do j = 1 to nbes;
+  do i = 1 to n;
+    xleav[j,1] = xleav[j,1] + (x1[i,j]/n);
+  end;
+end;
+do j = 1 to nbes;
+  do i = 1 to n;
+    x1[i,j] = x1[i,j] - xleav[j,1];
+  end;
+end;
+*/
+
+/*
+
+crit=1;
+
+
+Do it=1 to &maxit while (crit > &criteria);
+ * print beta;
+
+   U1 = j( nbeta, 1, 0);
+   A = j( nbeta, nbeta, 0);
+   Ar = A;
+
+Do i=1 to n;
+   free Y_i X_i p_i D1_i A_i V_i D1_i;
+
+       Y_i = Y[((i-1)*t+1):(i*t),1];
+       X_i = j(t,1,1) || X[((i-1)*t+1):(i*t),];
+       p_i = exp(X_i * beta)/(1 + exp(X_i * beta) );
+       A_i = Diag( diag(p_i) - p_i*p_i` );
+       D1_i = A_i*X_i;
+       V_i = A_i;
+
+u1_i = D1_i`*inv(V_i)*( Y_i - p_i );
+
+U1 = U1 + u1_i;                * the first set of equations;
+
+Ar = Ar + u1_i*u1_i`;      *estimate of Ar;
+
+A =  A + D1_i`*inv(V_i)*D1_i; *estimate of A;
+
+end;            * this ends the loop over each person for Beta;
+
+   DELTA1 = solve( A, U1 );
+   beta = beta + DELTA1;
+   crit = max( ABS(DELTA1));
+
+
+end;                      * this ends the loop over each iteration;
+
+print, beta;
+*/
+
+/*
+intc = { "int" };
+stop=1;
+do j=1 to stop;
+  intn = char(j,1);
+  int = concat(intc,intn);
+  variabl1 = variabl1 || int;    * this puts the names of the ;
+end;                             * beta parameters into variabl1;
+%if &es = 1 %then %do;
+   variabl1 = variabl1 || { &x2 };
+%end;
+%if &eps = 1 %then %do;
+   variabl1 = variabl1 || { &xps };
+%end;
+variabl1 = variabl1`;
+
+     B11 = dvd;
+
+     vb = inv(B11);       *variance matrix of beta estimates;
+
+     sebeta = sqrt(vecdiag(vb));      *vector of estimated
+                                       standard errors of
+                                       beta;
+
+     z1 = beta/sebeta;                 *z-statistics for beta;
+
+     zsq1 = z1#z1;
+
+     p1 = 1 - probchi(zsq1,1);     *two-sided p-value for beta;
+
+estimat1 = beta;
+se_est1 = sebeta;
+
+ print, { 'PARAMETER ESTIMATES with naive variance' };
+
+     print, variabl1 estimat1 se_est1 z1 p1;
+
+     vb = vb * u1sq * vb;    *robust variance matrix of beta;
+
+     sebeta = sqrt(vecdiag(vb));   *vector of estimated robust
+                                    standard errors of beta;
+
+     z1 = beta/sebeta;              *z-statistics for beta;
+
+     zsq1 = z1#z1;
+
+     p1 = 1 - probchi(zsq1,1);    *two-sided p-value for beta;
+
+se_est1 = sebeta;
+
+ print, { 'PARAMETER ESTIMATES with robust variance' };
+
+    print, variabl1 estimat1 se_est1 z1 p1;
+*/
+   U1 = j( nbeta, 1, 0);
+   U2 = j( ntheta, 1, 0);
+   A = j( nbeta, nbeta, 0);
+   Ar = A;
+   Br = j( ntheta, nbeta, 0);
+   Cr = j( ntheta, ntheta, 0);
+   B = Br;
+   C = Cr;
+
+                       * this part creates U and dvcovvd;
+   
+Do i=1 to n;
+   free Y_i X_i T_i A_i V_i I_i Z_i S_i X2_i p_i D1_i D2_i ind_i k;
+       
+    times = loc(id=i);
+    T_i = ncol(times);   
+    Y_i = Y[times,];
+    X_i = j(t,1,1) || X[times,];
+    ind_i=inde[times,];
+    I_i=j(t,m,0);
+   Do j=1 to t;
+       k=ind_i[j,1];
+       I_i[j,k]=1;
+   end;
+   Z_i=j(1,(t-1),0) // i(t-1);
+   S_i=I_i[2,];
+   if t>2  then do;
+   do j=3 to t;
+      S_i=block(S_i,I_i[j,]);
+   end;
+   end;
+   S_i= j(1,(t-1)*m,0) // S_i;
+   X2_i= Z_i || I_i || S_i;
+    p_i = pi[times,];
+    A_i = Diag( diag(p_i) - p_i*p_i` );
+    V_i = sqrt(A_i)*Rw*sqrt(A_i);
+    D1_i = A_i*X_i;   
+    D2_i = A_i*X2_i;
+    u2_i = D2_i`*inv(V_i)*(Y_i - p_i);
+    U2 = U2 + u2_i;
+    Br = Br + D2_i`*inv(V_i)*(Y_i - p_i)*(Y_i - p_i)`*inv(V_i)*D1_i;
+    Cr = Cr + D2_i`*inv(V_i)*(Y_i - p_i)*(Y_i - p_i)`*inv(V_i)*D2_i;
+    B = B + D2_i`*inv(V_i)*D1_i;
+    C = C + D2_i`*inv(V_i)*D2_i;    
+    Ar = Ar + D1_i`*inv(V_i)*(Y_i - p_i)*(Y_i - p_i)`*inv(V_i)*D1_i;
+    A = A + D1_i`*inv(V_i)*D1_i;
+
+end;       * this ends the loop over each person for U and dvcovvd;
+
+Q = 0;
+QR = 0;
+V = C - B*inv(A)*B`;
+VR = Cr - Br*inv(Ar)*Br`;
+
+Q = U2` * ginv(V) * U2;
+QR = U2` * ginv(VR) * U2;
+df = round(trace(ginv(V)*V));
+dfr = round(trace(ginv(VR)*VR));
+
+x=Q || df || QR || dfr;
+edit bhs;
+setout bhs;
+append from x;
+free x;
+close bhs;
+free /;
+quit;
+
+  /* result = estimat1` || se_est1` || Q || QR;
+   create out from result;
+   append from result;*/
+%mend barn;
